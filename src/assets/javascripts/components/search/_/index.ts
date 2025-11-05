@@ -96,7 +96,9 @@ export function mountSearch(
   shadow.appendChild(h("style", {}, css.toString()))
 
   // Setup search worker
-  setup(config.search)
+  setup(config.search, {
+    highlight: config.features.includes("search.highlight")
+  })
   from(index$)
     .subscribe(index => {
       // Adjust base URLs of items

@@ -26,6 +26,7 @@
 import "focus-visible"
 
 import {
+  EMPTY,
   NEVER,
   Observable,
   Subject,
@@ -45,7 +46,6 @@ import {
   getActiveElement,
   getOptionalElement,
   requestJSON,
-  setLocation,
   setToggle,
   watchDocument,
   watchKeyboard,
@@ -69,6 +69,7 @@ import {
   mountPalette,
   mountProgress,
   mountSearch,
+  mountSearchHighlight,
   mountSidebar,
   mountSource,
   mountTableOfContents,
@@ -268,6 +269,13 @@ const content$ = defer(() => merge(
   // Content
   ...getComponentElements("content")
     .map(el => mountContent(el, { sitemap$, viewport$, target$, print$ })),
+
+  // Search highlighting
+  ...getComponentElements("content")
+    .map(el => feature("search.highlight")
+      ? mountSearchHighlight(el, { index$, location$ })
+      : EMPTY
+    ),
 
   // Header
   ...getComponentElements("header")

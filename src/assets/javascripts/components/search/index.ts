@@ -24,4 +24,5 @@
  */
 
 export * from "./_"
+export * from "./highlight"
 export * from "./schema"
