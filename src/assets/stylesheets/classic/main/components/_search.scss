@@ -57,8 +57,8 @@
   &__button {
     position: relative;
     padding-inline: px2rem(38px) px2rem(44px);
-    color: var(--md-default-fg-color);
-    background: var(--md-default-bg-color);
+    color: var(--md-primary-bg-color);
+    background: var(--md-primary-fg-color);
     font-size: px2rem(14px);
     text-align: left;
     cursor: pointer;
@@ -73,7 +73,7 @@
 
       // Search on focus/hover
       &:is(:focus, :hover) {
-        color: var(--md-default-fg-color);
+        color: var(--md-primary-bg-color);
         background-color: hsla(0, 0%, 100%, 0.12);
       }
     }
@@ -87,7 +87,7 @@
       width: px2rem(20px);
       height: px2rem(20px);
       content: "";
-      background-color: var(--md-default-fg-color);
+      background-color: var(--md-primary-bg-color);
       mask-image: var(--md-search-icon);
       mask-repeat: no-repeat;
       mask-position: center;
