@@ -88,6 +88,7 @@ export function mountSearch(
 
   // Adjust styles of host
   host.style.position = "fixed"
+  host.style.height = "100%"
   host.style.top = "0"
   host.style.zIndex = "4";
 
