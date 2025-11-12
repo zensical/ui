@@ -29,7 +29,8 @@
 
 // Tasklist variables
 :root {
-  --md-tasklist-icon: svg-load("lucide/circle-check.svg");
+  --md-tasklist-icon: svg-load("lucide/circle.svg");
+  --md-tasklist-icon--checked: svg-load("lucide/circle-check-big.svg");
 }
 
 // ----------------------------------------------------------------------------
@@ -75,5 +76,6 @@
   // Tasklist indicator in checked state
   [type="checkbox"]:checked + .task-list-indicator::before {
     background-color: $clr-green-a400;
+    mask-image: var(--md-tasklist-icon--checked);
   }
 }
