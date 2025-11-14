@@ -136,7 +136,7 @@
           </ul>
         </nav>
       {% else %}
-        {{ render_pruned(nav_item) }}
+        {{ render_pruned(nav_item, index) }}
       {% endif %}
     </li>
   {% elif nav_item.active %}
