@@ -102,10 +102,14 @@
       display: block;
       padding: px2rem(2px) px2rem(4px);
       font-size: px2rem(12px);
-      letter-spacing: px2rem(0.75px);
-      content: "⌘K";
+      content: "Ctrl+K";
       background: hsla(0, 0%, 0%, 0.26);
       border-radius: px2rem(2px);
+
+      // Show macOS shortcut
+      [data-platform^="Mac"] & {
+        content: "⌘K";
+      }
     }
   }
 }
