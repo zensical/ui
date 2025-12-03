@@ -1,0 +1,297 @@
+////
+/// Copyright (c) 2025 Zensical and contributors
+///
+/// SPDX-License-Identifier: MIT
+/// Third-party contributions licensed under DCO
+///
+/// Permission is hereby granted, free of charge, to any person obtaining a
+/// copy of this software and associated documentation files (the "Software"),
+/// to deal in the Software without restriction, including without limitation
+/// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+/// and/or sell copies of the Software, and to permit persons to whom the
+/// Software is furnished to do so, subject to the following conditions:
+///
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+///
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+/// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+/// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+/// DEALINGS
+////
+
+// ----------------------------------------------------------------------------
+// Rules
+// ----------------------------------------------------------------------------
+
+// Admonition variables
+:root {
+  --md-admonition-icon--mkdocstrings: svg-load("lucide/unfold-vertical.svg");
+  --md-admonition-icon--mkdocstrings-open: svg-load("lucide/fold-vertical.svg");
+}
+
+// ----------------------------------------------------------------------------
+
+// Object name
+.doc-object-name {
+  font-family: var(--md-code-font-family);
+}
+
+// Symbol heading
+code.doc-symbol-heading {
+  padding: 0;
+  margin-right: px2rem(8px);
+}
+
+// Labels
+.doc-labels {
+  margin-inline-start: px2rem(8px);
+}
+
+// Label
+.doc-label code {
+  background: transparent;
+  font-weight: 400;
+  padding-inline: px2rem(6px);
+  border-radius: px2rem(10px);
+  vertical-align: text-bottom;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color--light);
+}
+
+// Avoid breaking parameter names, etc. in table cells
+.doc-contents td code {
+  word-break: normal !important;
+}
+
+// No line break before first paragraph of descriptions
+.doc-md-description,
+.doc-md-description > p:first-child {
+  display: inline;
+}
+
+// No text transformation for H5 headings
+.md-typeset h5 .doc-object-name {
+  text-transform: none;
+}
+
+// Max width for docstring sections tables.
+.doc .md-typeset__table,
+.doc .md-typeset__table table {
+  display: table !important;
+  width: 100%;
+}
+
+.doc .md-typeset__table tr {
+  display: table-row;
+}
+
+// Defaults in Spacy table style.
+.doc-param-default,
+.doc-type_param-default {
+  float: right;
+}
+
+// Parameter headings must be inline, not blocks
+.doc-heading-parameter,
+.doc-heading-type_parameter {
+  display: inline;
+}
+
+// Default font size for parameter headings.
+.md-typeset .doc-heading-parameter {
+  font-size: inherit;
+}
+
+// Prefer space on the right, not the left of parameter permalinks
+.doc-heading-parameter .headerlink,
+.doc-heading-type_parameter .headerlink {
+  margin-left: 0 !important;
+  margin-right: px2rem(4px);
+}
+
+// Backward-compatibility: docstring section titles in bold
+.doc-section-title {
+  font-weight: bold;
+}
+
+// Maintain syntax highlighting on cross-references, add underline.
+.doc-signature .autorefs {
+  color: inherit;
+  border-bottom: 1px dotted currentcolor;
+}
+
+// Indentation
+div.doc-contents:not(.first) {
+  padding-left: px2rem(16px);
+  margin-left: px2rem(8px);
+  border-left: px2rem(1px) solid var(--md-code-bg-color);
+}
+
+// Symbols in Navigation and ToC.
+:root, :host,
+[data-md-color-scheme="default"] {
+  --doc-symbol-parameter-fg-color: #829bd1;
+  --doc-symbol-type_parameter-fg-color: #829bd1;
+  --doc-symbol-attribute-fg-color: #953800;
+  --doc-symbol-function-fg-color: #8250df;
+  --doc-symbol-method-fg-color: #8250df;
+  --doc-symbol-class-fg-color: #0550ae;
+  --doc-symbol-type_alias-fg-color: #0550ae;
+  --doc-symbol-module-fg-color: #5cad0f;
+}
+[data-md-color-scheme="slate"] {
+  --doc-symbol-parameter-fg-color: #829bd1;
+  --doc-symbol-type_parameter-fg-color: #829bd1;
+  --doc-symbol-attribute-fg-color: #ffa657;
+  --doc-symbol-function-fg-color: #d2a8ff;
+  --doc-symbol-method-fg-color: #d2a8ff;
+  --doc-symbol-class-fg-color: #79c0ff;
+  --doc-symbol-type_alias-fg-color: #79c0ff;
+  --doc-symbol-module-fg-color: #baff79;
+}
+
+// Render table of contents ellipsis with code font
+.md-ellipsis:has(.doc-symbol) {
+  font-family: var(--md-code-font-family);
+  font-size: 0.95em;
+}
+
+// Symbol styles
+code.doc-symbol {
+  border-radius: px2rem(2px);
+  // padding: 0 2px;
+  font-size: 1em;
+  font-weight: 400;
+  background-color: transparent;
+}
+
+code.doc-symbol-parameter,
+a code.doc-symbol-parameter {
+  color: var(--doc-symbol-parameter-fg-color);
+}
+
+.md-content code.doc-symbol-parameter::after {
+  content: "param";
+}
+
+.md-sidebar code.doc-symbol-parameter::after {
+  content: "p";
+}
+
+code.doc-symbol-type_parameter,
+a code.doc-symbol-type_parameter {
+  color: var(--doc-symbol-type_parameter-fg-color);
+}
+
+.md-content code.doc-symbol-type_parameter::after {
+  content: "type-param";
+}
+
+.md-sidebar code.doc-symbol-type_parameter::after {
+  content: "t";
+}
+
+code.doc-symbol-attribute,
+a code.doc-symbol-attribute {
+  color: var(--doc-symbol-attribute-fg-color);
+}
+
+.md-content code.doc-symbol-attribute::after {
+  content: "attribute";
+}
+
+.md-sidebar code.doc-symbol-attribute::after {
+  content: "a";
+}
+
+code.doc-symbol-function,
+a code.doc-symbol-function {
+  color: var(--doc-symbol-function-fg-color);
+}
+
+.md-content code.doc-symbol-function::after {
+  content: "func";
+}
+
+.md-sidebar code.doc-symbol-function::after {
+  content: "f";
+}
+
+code.doc-symbol-method,
+a code.doc-symbol-method {
+  color: var(--doc-symbol-method-fg-color);
+}
+
+.md-content code.doc-symbol-method::after {
+  content: "method";
+}
+
+.md-sidebar code.doc-symbol-method::after {
+  content: "m";
+}
+
+code.doc-symbol-class,
+a code.doc-symbol-class {
+  color: var(--doc-symbol-class-fg-color);
+}
+
+.md-content code.doc-symbol-class::after {
+  content: "class";
+}
+
+.md-sidebar code.doc-symbol-class::after {
+  content: "c";
+}
+
+
+code.doc-symbol-type_alias,
+a code.doc-symbol-type_alias {
+  color: var(--doc-symbol-type_alias-fg-color);
+}
+
+.md-content code.doc-symbol-type_alias::after {
+  content: "type";
+}
+
+.md-sidebar code.doc-symbol-type_alias::after {
+  content: "t";
+}
+
+code.doc-symbol-module,
+a code.doc-symbol-module {
+  color: var(--doc-symbol-module-fg-color);
+}
+
+.md-content code.doc-symbol-module::after {
+  content: "module";
+}
+
+.md-sidebar code.doc-symbol-module::after {
+  content: "mod";
+}
+
+// Admonition
+.md-typeset details.mkdocstrings-source {
+  background: transparent;
+  border: px2rem(1px) solid var(--md-code-bg-color);
+
+  // Icon for closed block
+  > summary::before {
+    background-color: var(--md-default-fg-color--light);
+    mask-image: var(--md-admonition-icon--mkdocstrings);
+  }
+
+  // Icon for open block
+  &[open] > summary::before {
+    mask-image: var(--md-admonition-icon--mkdocstrings-open);
+  }
+
+  // Collapse marker
+  > summary::after {
+    background-color: var(--md-default-fg-color--light);
+  }
+}
