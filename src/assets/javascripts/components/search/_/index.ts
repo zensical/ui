@@ -30,6 +30,7 @@ import {
   from,
   fromEvent,
   skip,
+  filter,
 } from "rxjs"
 
 
@@ -116,7 +117,7 @@ export function mountSearch(
 
   // Open search on mobile
   watchToggle("search")
-    .pipe(skip(1))
+    .pipe(skip(1), filter(Boolean))
     .subscribe(() => open())
 
   // Return nothing

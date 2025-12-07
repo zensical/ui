@@ -175,7 +175,16 @@ merge(location$, target$)
     .subscribe(() => {
       setToggle("drawer", false)
       setToggle("search", false)
-    })
+  })
+
+// Close search on Escape in search mode
+keyboard$
+  .pipe(
+    filter(({ mode, type }) => mode === "search" && type === "Escape")
+  )
+  .subscribe(() => {
+    setToggle("search", false)
+  })
 
 // Set up global keyboard handlers
 keyboard$

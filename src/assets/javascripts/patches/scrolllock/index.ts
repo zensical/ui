@@ -30,13 +30,22 @@ import {
   map,
   of,
   switchMap,
-  withLatestFrom
+  withLatestFrom,
+  fromEvent,
+  startWith,
+  distinctUntilChanged,
+  merge as rxMerge
 } from "rxjs"
 
 import {
   Viewport,
-  watchToggle
+  watchToggle,
+  getToggle,
+  setToggle
 } from "~/browser"
+
+// @ts-ignore
+import { isSearchHidden } from "~/components/search/client"
 
 /* ----------------------------------------------------------------------------
  * Helper types
@@ -67,7 +76,20 @@ interface PatchOptions {
 export function patchScrolllock(
   { viewport$, tablet$ }: PatchOptions
 ): void {
-  combineLatest([watchToggle("search"), tablet$])
+  const visible$ = rxMerge(
+    watchToggle("search"),
+    fromEvent(window, "click"),
+    fromEvent(window, "keydown"),
+    fromEvent(window, "keyup"),
+    fromEvent(window, "popstate")
+  )
+    .pipe(
+      map(() => !isSearchHidden()),
+      startWith(!isSearchHidden()),
+      distinctUntilChanged()
+    )
+
+  combineLatest([visible$, tablet$])
     .pipe(
       map(([active, tablet]) => active && !tablet),
       switchMap(active => of(active)
@@ -87,6 +109,8 @@ export function patchScrolllock(
           document.body.style.top = ""
           if (value)
             window.scrollTo(0, value)
+          if (getToggle("search"))
+            setToggle("search", false)
         }
       })
 }
