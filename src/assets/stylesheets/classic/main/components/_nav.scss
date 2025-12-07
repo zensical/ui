@@ -529,6 +529,7 @@
       .md-nav__list {
         padding-inline-start: px2rem(12px);
         padding-bottom: px2rem(8px);
+        border-inline-start: px2rem(1px) solid var(--md-default-fg-color--lightest);
       }
 
       // Adjust spacing for navigation link - before this change, we set spacing
@@ -659,7 +660,7 @@
       // Navigation
       > .md-nav {
         display: block;
-        margin-inline-start: px2rem(-12px);
+        margin-inline-start: px2rem(-15px);
         visibility: visible;
         opacity: 1;
 
@@ -749,7 +750,7 @@
 
         // Adjust spacing for nested navigation
         > .md-nav:not(.md-nav--secondary) {
-          margin-inline-start: px2rem(-12px);
+          margin-inline-start: px2rem(-15px);
         }
 
         // Make labels discernable from links
@@ -775,7 +776,7 @@
         display: block;
         margin-bottom: 1.25em;
         visibility: visible;
-        border-inline-start: px2rem(1px) solid var(--md-primary-fg-color);
+        // border-inline-start: px2rem(1px) solid var(--md-primary-fg-color);
         opacity: 1;
 
         // Navigation list
