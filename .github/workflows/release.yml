@@ -93,7 +93,8 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: templates.tar.gz
+          path: artifacts
+          merge-multiple: true
 
       - name: Create release
         env:
@@ -108,7 +109,7 @@ jobs:
       - name: Upload release artifacts
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload $VERSION templates.tar.gz
+        run: gh release upload $VERSION artifacts/*
 
       - name: Publish release
         env:
