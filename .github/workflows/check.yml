@@ -21,7 +21,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-name: Build
+name: Check
 
 on:
   push:
@@ -30,65 +30,26 @@ on:
   pull_request:
     branches:
       - master
-  workflow_call:
-    inputs:
-      ref:
-        required: true
-        type: string
-
-permissions:
-  attestations: write # Required for attestations
-  id-token: write     # Required for OIDC
 
 jobs:
-  build:
-    name: Templates
+  release:
+    name: Release
     runs-on: ubuntu-latest
+    if: |
+      startsWith(github.event.pull_request.head.ref, 'release/')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.ref || github.sha }}
+          ref: ${{ github.sha }}
+          fetch-depth: 0
 
-      - name: Set up Node.js runtime
-        uses: actions/setup-node@v5
-        with:
-          node-version: 24.x
-
-      - name: Set up Node.js dependency cache
-        uses: actions/cache@v4
-        id: cache
-        with:
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          path: node_modules
-
-      - name: Set up Node.js dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
-
-      - name: Build artifact
-        run: npm run build
-
-      - name: Create artifact archive
-        shell: bash
+      - name: Check commit count
         run: |
-          if [ -d dist ]; then
-            tar -C dist -czf templates.tar.gz .
-            ls -la
-          else
-            echo "dist directory not found"
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          COMMITS=$(git rev-list --count $HEAD ^$BASE)
+          if [ "$COMMITS" -ne 1 ]; then
+            echo "Release branch must contain exactly one commit, found $COMMITS"
             exit 1
           fi
-
-      - name: Create artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          show-summary: false
-          subject-path: templates.tar.gz
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: templates
-          path: templates.tar.gz
-
