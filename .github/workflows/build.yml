@@ -72,9 +72,10 @@ jobs:
       - name: Create artifact archive
         shell: bash
         run: |
+          mkdir -p artifacts
           if [ -d dist ]; then
-            tar -C dist -czf templates.tar.gz .
-            ls -la
+            tar -C dist -czf artifacts/templates.tar.gz .
+            ls -la artifacts
           else
             echo "dist directory not found"
             exit 1
@@ -84,11 +85,11 @@ jobs:
         uses: actions/attest-build-provenance@v1
         with:
           show-summary: false
-          subject-path: templates.tar.gz
+          subject-path: artifacts/*
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: templates
-          path: templates.tar.gz
+          path: artifacts/*
 
