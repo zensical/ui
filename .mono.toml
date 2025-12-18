@@ -22,7 +22,8 @@
 # IN THE SOFTWARE.
 
 [changeset.scopes]
+dist = "dist"
 templates = "src"
-application = "src/assets/javascripts"
+scripts = "src/assets/javascripts"
 styles = "src/assets/stylesheets"
 tools = "tools"
