@@ -47,9 +47,9 @@
     {% endblock %}
     {% block styles %}
       {% if config.theme.variant == "modern" %}
-        {% set href = 'assets/stylesheets/modern/main.77c2767f.min.css' | url %}
+        {% set href = 'assets/stylesheets/modern/main.f1b6466b.min.css' | url %}
       {% else %}
-        {% set href = 'assets/stylesheets/classic/main.6c47de74.min.css' | url %}
+        {% set href = 'assets/stylesheets/classic/main.70d17ad7.min.css' | url %}
       {% endif %}
       <link rel="stylesheet" href="{{ href }}">
       {% if config.theme.palette %}
@@ -250,7 +250,7 @@
       </script>
     {% endblock %}
     {% block scripts %}
-      <script src="{{ 'assets/javascripts/bundle.2e16b724.min.js' | url }}"></script>
+      <script src="{{ 'assets/javascripts/bundle.d8ffd5d1.min.js' | url }}"></script>
       {% for script in config.extra_javascript %}
         {{ script | script_tag }}
       {% endfor %}

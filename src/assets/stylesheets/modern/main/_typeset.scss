@@ -289,8 +289,8 @@ kbd {
     vertical-align: text-top;
     border-radius: px2rem(4px);
     box-shadow:
-      0 0 0 1px var(--md-typeset-kbd-border-color),
-      0 3px 0   var(--md-typeset-kbd-border-color);
+      0 0 0 px2rem(1px) var(--md-typeset-kbd-border-color),
+      0 px2rem(3px) 0   var(--md-typeset-kbd-border-color);
   }
 
   // Text highlighting marker

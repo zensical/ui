@@ -132,7 +132,7 @@ const assets$ = concat(
     })),
 
   // Copy Lucide icons
-  ...["**/*.svg", "../LICENSE.md"]
+  ...["**/*.svg", "../LICENSE"]
     .map(pattern => copyAll(pattern, {
       from: "node_modules/lucide-static/icons",
       to: `${base}/.icons/lucide`,
@@ -152,7 +152,15 @@ const assets$ = concat(
     .map(pattern => copyAll(pattern, {
       from: "src",
       to: base
-    }))
+    })),
+
+  // Copy third-party license file
+  ...["LICENSE"]
+    .map(pattern => copyAll(pattern, {
+      from: "src/assets/javascripts",
+      to: `dist/assets/javascripts`,
+      transform: async data => minsvg(data)
+    })),
 )
 
 // -------------------------------------------------------------------------

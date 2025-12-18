@@ -230,18 +230,6 @@
     flex-shrink: 0;
     max-width: 100%;
     white-space: nowrap;
-    transition:
-      max-width  0ms 250ms,
-      opacity  250ms 250ms;
-
-    // Hide toggle when search is active
-    [data-md-toggle="search"]:checked ~ .md-header & {
-      max-width: 0;
-      opacity: 0;
-      transition:
-        max-width 0ms,
-        opacity   0ms;
-    }
 
     // Hack: Firefox 117 introduces a bug where the browser scrolls the page by
     // a small amount to the top every time the header button is focused. After

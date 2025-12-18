@@ -46,6 +46,7 @@ import {
   getActiveElement,
   getOptionalElement,
   requestJSON,
+  setLocation,
   setToggle,
   watchDocument,
   watchKeyboard,
@@ -190,7 +191,7 @@ keyboard$
         case "p":
           const prev = document.querySelector("link[rel=prev]")
           if (prev instanceof HTMLLinkElement)
-            window.location.href = prev.href
+            setLocation(prev)
           break
 
         // Go to next page
@@ -198,7 +199,7 @@ keyboard$
         case "n":
           const next = document.querySelector("link[rel=next]")
           if (next instanceof HTMLLinkElement)
-            window.location.href = next.href
+            setLocation(next)
           break
 
         // Open search
