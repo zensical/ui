@@ -22,7 +22,7 @@
 # IN THE SOFTWARE.
 
 [changeset.scopes]
-templates = "src"
-scripts = "src/assets/javascripts"
-styles = "src/assets/stylesheets"
-tools = "tools"
+templates = "src/**"
+scripts = "src/assets/javascripts/**"
+styles = "src/assets/stylesheets/**"
+tools = "tools/**"
