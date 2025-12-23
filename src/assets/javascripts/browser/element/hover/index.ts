@@ -55,13 +55,26 @@ import {
 export function watchElementHover(
   el: HTMLElement, timeout?: number
 ): Observable<boolean> {
-  return defer(() => merge(
-    fromEvent(el, "mouseenter").pipe(map(() => true)),
-    fromEvent(el, "mouseleave").pipe(map(() => false))
-  )
-    .pipe(
+  const { matches: hover } = matchMedia("(hover)")
+  return defer(() => {
+    const events = hover
+      ? merge(
+          fromEvent(el, "mouseenter").pipe(map(() => true)),
+          fromEvent(el, "mouseleave").pipe(map(() => false))
+        )
+      : merge (
+          fromEvent(el, "touchstart").pipe(map(() => true)),
+          fromEvent(el, "touchend").pipe(map(() => false)),
+          fromEvent(el, "touchcancel").pipe(map(() => false)),
+        )
+
+    // Apply debounce if timeout is specified - we emit two times, to make sure
+    // that tooltips are synchronized. We'll refactor this in the future, but
+    // will move to an entirely new event system anyway, as we move on to a
+    // proper component system implementation.
+    return events.pipe(
       timeout ? debounce(active => timer(+!active * timeout)) : identity,
-      startWith(el.matches(":hover"))
+      startWith(true, el.matches(":hover"))
     )
-  )
+  })
 }
