@@ -3,32 +3,36 @@
 -#}
 {% set admonition_icons = config.theme.icon.admonition | d({}, true) %}
 {% set admonition_extra = config.extra.admonitions | d({}, true) %}
-{% set types = [] %}
+{% set ns = namespace(types = []) %}
 {% if admonition_icons is mapping %}
   {% for type, icon in admonition_icons | items %}
-    {% if type and icon and type not in types %}
-      {% set _ = types.append(type) %}
+    {% if type and icon and type not in ns.types %}
+      {% set ns.types = ns.types + [type] %}
     {% endif %}
   {% endfor %}
 {% endif %}
 {% if admonition_extra is mapping %}
   {% for type, data in admonition_extra | items %}
-    {% if type and type not in types %}
+    {% if type and type not in ns.types %}
       {% if data is mapping %}
         {% set has_data = data.icon or data.color %}
       {% else %}
         {% set has_data = data %}
       {% endif %}
       {% if has_data %}
-        {% set _ = types.append(type) %}
+        {% set ns.types = ns.types + [type] %}
       {% endif %}
     {% endif %}
   {% endfor %}
 {% endif %}
-{% if types %}
+{% if ns.types %}
   {% set _ = namespace(style = "\u003cstyle\u003e:root{", has_icon = false) %}
-  {% for type in types %}
-    {% set data = admonition_extra.get(type) if admonition_extra is mapping else None %}
+  {% for type in ns.types %}
+    {% if admonition_extra is mapping and type in admonition_extra %}
+      {% set data = admonition_extra[type] %}
+    {% else %}
+      {% set data = None %}
+    {% endif %}
     {% if data is mapping %}
       {% set icon = data.icon %}
     {% elif data %}
@@ -36,8 +40,8 @@
     {% else %}
       {% set icon = None %}
     {% endif %}
-    {% if not icon and admonition_icons is mapping %}
-      {% set icon = admonition_icons.get(type) %}
+    {% if not icon and admonition_icons is mapping and type in admonition_icons %}
+      {% set icon = admonition_icons[type] %}
     {% endif %}
     {% if icon %}
       {% import ".icons/" ~ icon ~ ".svg" as icon %}
@@ -55,10 +59,14 @@
     {{ _.style }}
   {% endif %}
 {% endif %}
-{% if types %}
+{% if ns.types %}
   <style>
-  {% for type in types %}
-    {% set data = admonition_extra.get(type) if admonition_extra is mapping else None %}
+  {% for type in ns.types %}
+    {% if admonition_extra is mapping and type in admonition_extra %}
+      {% set data = admonition_extra[type] %}
+    {% else %}
+      {% set data = None %}
+    {% endif %}
     {% if data is mapping %}
       {% set color = data.color %}
       {% set icon = data.icon %}
@@ -69,12 +77,20 @@
       {% set color = None %}
       {% set icon = None %}
     {% endif %}
-    {% if not icon and admonition_icons is mapping %}
-      {% set icon = admonition_icons.get(type) %}
+    {% if not icon and admonition_icons is mapping and type in admonition_icons %}
+      {% set icon = admonition_icons[type] %}
     {% endif %}
     {% if color %}
+    {% if config.theme.variant == "modern" %}
     .md-typeset :is(.admonition, details).{{ type }} {
       background-color: color-mix(in srgb, {{ color }} 10%, transparent);
+      border-color: {{ color }};
+    }
+    .md-typeset :is(.admonition, details).{{ type }}:focus-within {
+      box-shadow: 0 0 0 0.25rem color-mix(in srgb, {{ color }} 10%, transparent);
+    }
+    {% else %}
+    .md-typeset :is(.admonition, details).{{ type }} {
       border-color: {{ color }};
     }
     .md-typeset :is(.admonition, details).{{ type }}:focus-within {
@@ -83,6 +99,7 @@
     .md-typeset .{{ type }} > .admonition-title {
       background-color: color-mix(in srgb, {{ color }} 10%, transparent);
     }
+    {% endif %}
     {% endif %}
     {% if color or icon %}
     .md-typeset .{{ type }} > .admonition-title::before {
