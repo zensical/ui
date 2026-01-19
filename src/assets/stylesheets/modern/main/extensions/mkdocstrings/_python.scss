@@ -121,7 +121,7 @@ code.doc-symbol-heading {
 // Maintain syntax highlighting on cross-references, add underline.
 .doc-signature .autorefs {
   color: inherit;
-  border-bottom: 1px dotted currentcolor;
+  text-decoration-style: dotted;
 }
 
 // Indentation
