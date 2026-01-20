@@ -30,7 +30,12 @@
 // Back-to-top button
 .md-top {
   position: fixed;
-  top: px2rem(48px + 16px);
+  // We must use !important here, since the JavaScript will set `top` to the
+  // actual value dynamically, as the header might have a variable height, and
+  // we can't change the JavaScript, as we want to keep the old behavior for
+  // the classic theme.
+  top: initial !important;
+  bottom: px2rem(32px);
   z-index: 2;
   display: flex;
   gap: px2rem(8px);
