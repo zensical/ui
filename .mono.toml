@@ -24,5 +24,6 @@
 [changeset.scopes]
 templates = "src/**"
 scripts = "src/assets/javascripts/**"
-styles = "src/assets/stylesheets/**"
+modern = "src/assets/stylesheets/modern/**"
+classic = "src/assets/stylesheets/classic/**"
 tools = "tools/**"
