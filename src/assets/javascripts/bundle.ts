@@ -30,6 +30,7 @@ import {
   NEVER,
   Observable,
   Subject,
+  catchError,
   defer,
   delay,
   filter,
@@ -111,6 +112,7 @@ function fetchSearchIndex(): Observable<SearchIndex> {
       .pipe(
         // @ts-ignore - @todo fix typings
         map(() => __index),
+        catchError(() => NEVER),
         shareReplay(1)
       )
   } else {

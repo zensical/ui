@@ -25,6 +25,7 @@
 
 import {
   EMPTY,
+  NEVER,
   Observable,
   Subject,
   catchError,
@@ -268,7 +269,7 @@ export function setupInstantNavigation(
   { sitemap$, location$, viewport$, progress$ }: SetupOptions
 ): Observable<Document> {
   if (location.protocol === "file:")
-    return EMPTY
+    return NEVER
 
   // Since we might be on a slow connection, the user might trigger multiple
   // instant navigation events that overlap. MkDocs produces relative URLs for
