@@ -31,6 +31,7 @@ import {
   filter,
   map,
   of,
+  skip,
   switchMap,
   zip
 } from "rxjs"
@@ -82,6 +83,11 @@ interface Dependencies {
  */
 let sequence = 0
 
+/**
+ * Cache for fetched documents
+ */
+const cache = new Map<string, Document>();
+
 /* ----------------------------------------------------------------------------
  * Helper functions
  * ------------------------------------------------------------------------- */
@@ -102,7 +108,7 @@ function extract(headline: HTMLElement): HTMLElement[] {
   let nextElement = headline.nextElementSibling
   while (nextElement && !(nextElement instanceof HTMLHeadingElement)) {
     // @ts-expect-error - fix once instant previews are stable
-    els.push(nextElement as HTMLElement)
+    els.push(nextElement.cloneNode(true) as HTMLElement)
     nextElement = nextElement.nextElementSibling
   }
 
@@ -152,6 +158,28 @@ function resolve(
   return of(document)
 }
 
+/**
+ * Fetch and cache document
+ *
+ * @param url - URL to fetch
+ * @returns Document observable
+ */
+function fetchDocument(url: URL): Observable<Document> {
+  const cachedDocument = cache.get(url.toString());
+  if (cachedDocument) {
+    return of(cachedDocument);
+  }
+
+  // Fetch document
+  return requestHTML(url).pipe(
+    switchMap(doc => resolve(doc, url)),
+    map(doc => {
+      cache.set(url.toString(), doc);
+      return doc;
+    })
+  );
+}
+
 /* ----------------------------------------------------------------------------
  * Functions
  * ------------------------------------------------------------------------- */
@@ -185,7 +213,7 @@ export function mountLink(
   const active$ =
     combineLatest([
       watchElementFocus(el),
-      watchElementHover(el)
+      watchElementHover(el).pipe(skip(1))
     ])
       .pipe(
         map(([focus, hover]) => focus || hover),
@@ -207,9 +235,7 @@ export function mountLink(
       //
       return of(url)
     }),
-    switchMap(url => requestHTML(url).pipe(
-      switchMap(doc => resolve(doc, url))
-    )),
+    switchMap(url => fetchDocument(url)),
     switchMap(doc => {
       const selector = el.hash
         ? `article [id="${el.hash.slice(1)}"]`
