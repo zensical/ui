@@ -40,7 +40,7 @@ import css from "../client/index.css"
 import { SearchIndex } from "../schema"
 import { configuration } from "~/_"
 import { h } from "~/utilities"
-import { watchToggle } from "~/browser"
+import { getElement, watchToggle } from "~/browser"
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -97,27 +97,37 @@ export function mountSearch(
   shadow.appendChild(h("style", {}, css.toString()))
 
   // Setup search worker
-  setup(config.search, {
-    highlight: config.features.includes("search.highlight")
-  })
-  from(index$)
-    .subscribe(index => {
-      // Adjust base URLs of items
-      for (const item of index.items) {
-        item.location = new URL(item.location, config.base).toString()
-      }
-      mount(index, shadow)
+  try {
+    setup(config.search, {
+      highlight: config.features.includes("search.highlight")
+    })
+    from(index$)
+      .subscribe(index => {
+        // Adjust base URLs of items
+        for (const item of index.items) {
+          item.location = new URL(item.location, config.base).toString()
+        }
+        mount(index, shadow)
+      })
+
+    // Open search
+    fromEvent(el, "click").subscribe(() => {
+      open()
     })
 
-  // Open search
-  fromEvent(el, "click").subscribe(() => {
-    open()
-  })
+    // Open search on mobile
+    watchToggle("search")
+      .pipe(skip(1))
+      .subscribe(() => open())
+  } catch {
+    // Search could not be initialized - we're likely offline, and the offline
+    // plugin has not been included, so we just hide the search
+    el.hidden = true
 
-  // Open search on mobile
-  watchToggle("search")
-    .pipe(skip(1))
-    .subscribe(() => open())
+    // Also hide search button in mobile view
+    let button = getElement("label[for=__search]")
+    button.hidden = true
+  }
 
   // Return nothing
   return NEVER
