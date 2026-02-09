@@ -90,8 +90,7 @@ import {
 import {
   patchEllipsis,
   patchIndeterminate,
-  patchScrollfix,
-  patchScrolllock
+  patchScrollfix
 } from "./patches"
 import "./polyfills"
 
@@ -223,7 +222,6 @@ keyboard$
 patchEllipsis({ viewport$, document$ })
 patchIndeterminate({ document$, tablet$ })
 patchScrollfix({ document$ })
-patchScrolllock({ viewport$, tablet$ })
 
 // Set up header and main area observable
 const header$ = watchHeader(getComponentElement("header"), { viewport$ })
