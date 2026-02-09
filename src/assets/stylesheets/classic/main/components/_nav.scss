@@ -280,6 +280,9 @@
           overflow-y: auto;
           touch-action: pan-y;
           scroll-snap-type: y mandatory;
+          // Prevent scroll chaining to the body when reaching the top/bottom of
+          // the sidebar - in 2026, this works on most modern touch devices
+          overscroll-behavior-y: contain;
           background-color: var(--md-default-bg-color);
           box-shadow:
             0 px2rem(1px) 0 var(--md-default-fg-color--lightest) inset;

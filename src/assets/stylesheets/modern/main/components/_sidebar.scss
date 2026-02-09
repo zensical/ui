@@ -80,6 +80,9 @@
         position: absolute;
         inset: 0;
         margin: 0;
+        // Prevent scroll chaining to the body when reaching the top/bottom of
+        // the sidebar - in 2026, this works on most modern touch devices
+        overscroll-behavior-y: contain;
       }
     }
   }
