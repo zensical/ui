@@ -109,11 +109,11 @@
     {% endif %}
 
     <!-- Repository information -->
-    <div class="md-header__source">
-      {% if config.repo_url %}
+    {% if config.repo_url %}
+      <div class="md-header__source">
         {% include "partials/source.html" %}
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </nav>
 
   <!-- Navigation tabs (sticky) -->
