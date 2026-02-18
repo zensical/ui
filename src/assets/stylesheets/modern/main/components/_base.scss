@@ -36,6 +36,9 @@ html {
   // `font-size` of `12px` if the system language is set to Chinese. For this
   // reason we just double the `font-size` and set it to `20px`.
   font-size: 125%;
+  // Ensure that there's always enough space for scrollbars to avoid layout
+  // shifts without affecting operating systems that use overlay scrollbars
+  scrollbar-gutter: stable;
 
   // [screen medium +]: Set base `font-size` to `11px`
   @include break-from-device(screen medium) {
