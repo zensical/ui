@@ -93,7 +93,7 @@ export function mountSearch(
   host.style.zIndex = "4";
 
   // Create a shadow root and inject search
-  const shadow = host.attachShadow({ mode: "closed" })
+  const shadow = host.attachShadow({ mode: "open" })
   shadow.appendChild(h("style", {}, css.toString()))
 
   // Setup search worker
