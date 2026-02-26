@@ -238,7 +238,7 @@ export function mountLink(
     switchMap(url => fetchDocument(url)),
     switchMap(doc => {
       const selector = el.hash
-        ? `article [id="${el.hash.slice(1)}"]`
+        ? `article [id="${decodeURIComponent(el.hash.slice(1))}"]`
         : "article h1"
 
       //
