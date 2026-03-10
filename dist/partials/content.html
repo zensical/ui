@@ -3,7 +3,7 @@
 -#}
 {% include "partials/actions.html" %}
 {% if "\u003ch1" not in page.content %}
-  <h1>{{ page.title | d(config.site_name, true)}}</h1>
+  <h1 id="__skip">{{ page.title | d(config.site_name, true)}}</h1>
 {% endif %}
 {{ page.content }}
 {% include "partials/tags.html" %}

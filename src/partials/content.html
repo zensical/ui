@@ -31,7 +31,7 @@
   page title (or respectively site name) is used as the main headline.
 -->
 {% if "\u003ch1" not in page.content %}
-  <h1>{{ page.title | d(config.site_name, true)}}</h1>
+  <h1 id="__skip">{{ page.title | d(config.site_name, true)}}</h1>
 {% endif %}
 
 <!-- Page content -->
