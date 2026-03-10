@@ -39,11 +39,12 @@
 
   // Tag list (if not hidden)
   .md-tags:not([hidden]) {
-    display: inline-flex;
+    display: flex;
     flex-wrap: wrap;
     gap: px2em(8px);
-    margin-top: px2em(-2px);
-    margin-bottom: px2em(12px);
+    margin-top: px2rem(16px);
+    margin-bottom: px2rem(24px);
+    padding-top: px2rem(24px);
   }
 
   // Tag
