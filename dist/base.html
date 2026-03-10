@@ -111,6 +111,10 @@
         <a href="{{ skip.url | url }}" class="md-skip">
           {{ lang.t("action.skip") }}
         </a>
+      {% else %}
+        <a href="#__skip" class="md-skip">
+          {{ lang.t("action.skip") }}
+        </a>
       {% endif %}
     </div>
     <div data-md-component="announce">
