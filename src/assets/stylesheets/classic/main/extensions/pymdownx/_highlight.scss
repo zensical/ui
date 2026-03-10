@@ -222,6 +222,14 @@
     visibility: hidden;
   }
 
+  // Code annotations can be overlaid by the code block controls. Thus, if an
+  // annotation is inside the last child of a line span, we need to add some
+  // margin to the right, so it doesn't get overlaid by the controls. This is
+  // a very specialized override - see https://t.ly/eDsJg
+  code > span[id^="__span"] > :last-child .md-annotation {
+    margin-right: px2rem(48px);
+  }
+
   // Copying in progress - this class is set before the content is copied and
   // removed after copying is done to mitigate whitespace-related issues.
   code[data-md-copying] {
