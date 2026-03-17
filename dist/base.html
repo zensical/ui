@@ -47,7 +47,7 @@
     {% endblock %}
     {% block styles %}
       {% if config.theme.variant == "modern" %}
-        {% set href = 'assets/stylesheets/modern/main.50057488.min.css' | url %}
+        {% set href = 'assets/stylesheets/modern/main.6f2fbb28.min.css' | url %}
       {% else %}
         {% set href = 'assets/stylesheets/classic/main.5b14e6eb.min.css' | url %}
       {% endif %}
@@ -230,6 +230,12 @@
       {% set _ = namespace() %}
       {% set _.annotate = config.extra.annotate %}
       {% set _.tags = config.extra.tags %}
+      {%- if config.extra.version -%}
+        {%- set mike = config.plugins.mike -%}
+        {%- if not mike or mike.config.version_selector -%}
+          {%- set _.version = config.extra.version -%}
+        {%- endif -%}
+      {%- endif -%}
       <script id="__config" type="application/json">
         {{- {
           "base": base_url,
