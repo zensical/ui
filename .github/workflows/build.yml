@@ -59,7 +59,7 @@ jobs:
           node-version: 24.x
 
       - name: Set up Node.js dependency cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: cache
         with:
           key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
@@ -92,7 +92,7 @@ jobs:
           subject-path: artifacts/*
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: templates
           path: artifacts/*
