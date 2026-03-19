@@ -211,17 +211,6 @@
     box-shadow: px2rem(-1px) 0 var(--md-default-fg-color--lightest) inset;
   }
 
-  // Code block line anchors - Chrome and Safari seem to have a strange bug
-  // where scroll margin is not applied to anchors inside code blocks. Setting
-  // positioning to absolute seems to fix the problem. Interestingly, this does
-  // not happen in Firefox. Furthermore we must set `visibility: hidden` or
-  // the copy to clipboard functionality will include an empty line between
-  // each set of lines.
-  code a[id] {
-    position: absolute;
-    visibility: hidden;
-  }
-
   // Code annotations can be overlaid by the code block controls. Thus, if an
   // annotation is inside the last child of a line span, we need to add some
   // margin to the right, so it doesn't get overlaid by the controls. This is
