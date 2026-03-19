@@ -142,15 +142,15 @@ export function setupSearchHighlighter(
   /* Return factory function */
   return (query: string) => {
     query = query
-      .replace(/[\s*+\-:~^]+/g, " ")
+      .replace(/\s+/g, " ")
       .replace(/&/g, "&amp;")
       .trim()
 
     /* Create search term match expression */
     const match = new RegExp(`(^|${config.separator}|)(${
       query
-        .replace(/[|\\{}()[\]^$+*?.-]/g, "\\$&")
         .split(separator)
+        .map(term => term.replace(/[|\\{}()[\]^$+*?.-]/g, "\\$&"))
         .filter(term => term.length > 0)
         .join("|")
     })`, "img")
