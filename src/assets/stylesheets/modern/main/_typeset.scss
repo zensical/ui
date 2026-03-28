@@ -218,7 +218,7 @@ kbd {
 
   // Inline code block
   code {
-    padding: 0 px2em(4px, 13.6px);
+    padding: 0.25em 0.4em;
     font-size: px2em(13.6px);
     word-break: break-word;
     background-color: var(--md-code-bg-color);
