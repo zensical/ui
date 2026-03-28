@@ -27,6 +27,13 @@
 // Rules
 // ----------------------------------------------------------------------------
 
+// Sidebar variables
+:root {
+  --md-toc-icon: svg-load("lucide/text-align-start.svg");
+}
+
+// ----------------------------------------------------------------------------
+
 // Sidebar
 .md-sidebar {
   position: sticky;
@@ -57,16 +64,16 @@
       backdrop-filter: blur(px2rem(8px));
       border-radius: px2rem(16px);
       transition:
-        transform  250ms cubic-bezier(0.5, 0, 0.5, 0),
-        box-shadow 250ms;
+        transform  200ms cubic-bezier(0.5, 0, 0.5, 0),
+        box-shadow 200ms;
       transform: translateX(0);
 
       // Show sidebar when drawer is active
       [data-md-toggle="drawer"]:checked ~ .md-container & {
         box-shadow: var(--md-shadow-z3);
         transition:
-          transform  350ms cubic-bezier(0.7, 0.7, 0.1, 1),
-          box-shadow 350ms;
+          transform  250ms cubic-bezier(0.7, 0.7, 0.1, 1),
+          box-shadow 250ms;
         transform: translateX(px2rem(250px));
 
         // Adjust for right-to-left languages
@@ -104,12 +111,121 @@
 
   // Secondary sidebar with table of contents
   &--secondary {
-    display: none;
     order: 2;
+
+    // [tablet landscape +]: Show table of contents as sidebar
+    @include break-to-device(tablet portrait) {
+      position: fixed;
+      top: initial;
+      width: initial;
+      right: px2rem(16px);
+      bottom: px2rem(32px);
+      z-index: 2;
+      padding: 0;
+
+      // Adjust spacing
+      .md-nav--secondary {
+        margin-top: 0;
+      }
+
+      // Sidebar title
+      .md-nav__title {
+        padding: px2rem(11px) px2rem(12px) px2rem(7px);
+      }
+
+      // Sidebar toggle container
+      .md-sidebar__scrollwrap {
+        position: relative;
+        display: flex;
+        flex-direction: column-reverse;
+        overflow-y: visible;
+      }
+
+      // Sidebar container
+      .md-sidebar__inner {
+        position: absolute;
+        right: 0;
+        bottom: px2rem(54px);
+        width: px2rem(234px);
+        pointer-events: none;
+        opacity: 0;
+        max-height: 50vh;
+        transition:
+          transform 0ms 250ms,
+          opacity 250ms;
+        transform: translateY(px2rem(8px));
+        overflow-y: auto;
+        background-color: var(--md-default-bg-color);
+        box-shadow: var(--md-shadow-z2);
+        border-radius: px2rem(8px);
+        padding-bottom: px2rem(8px);
+      }
+
+      // Sidebar in open state
+      [type="checkbox"]:checked ~ .md-sidebar__inner {
+          pointer-events: initial;
+          opacity: 1;
+          transition:
+            transform 400ms cubic-bezier(0, 1, 0.35, 1),
+            opacity   250ms,
+            z-index     0ms;
+          transform: translateY(0);
+      }
+
+      // Sidebar toggle button
+      .md-sidebar-button {
+        display: inline-flex;
+        gap: px2rem(8px);
+        padding: px2rem(10px);
+        font-size: px2rem(14px);
+        color: var(--md-default-fg-color--light);
+        cursor: pointer;
+        background-color: var(--md-default-bg-color--light);
+        backdrop-filter: blur(px2rem(8px));
+        border-radius: px2rem(32px);
+        outline: none;
+        box-shadow: var(--md-shadow-z2);
+        transition:
+          color            125ms,
+          background-color 125ms,
+          transform        125ms cubic-bezier(0.4, 0, 0.2, 1),
+          opacity          125ms;
+
+        // Table of contents icons
+        &::after {
+          display: block;
+          width: px2rem(18px);
+          height: px2rem(18px);
+          content: "";
+          background-color: currentcolor;
+          mask-image: var(--md-toc-icon);
+          mask-repeat: no-repeat;
+          mask-position: center;
+          mask-size: contain;
+          transition: transform 250ms;
+        }
+
+        // Back-to-top button on focus/hover
+        &:is(:focus, :hover) {
+          color: var(--md-accent-bg-color);
+          background-color: var(--md-accent-fg-color);
+        }
+
+        // Wrapper
+        &__wrapper {
+          text-align: right;
+        }
+      }
+    }
 
     // [tablet landscape +]: Show table of contents as sidebar
     @include break-from-device(tablet landscape) {
       height: 0;
+
+      // Sidebar toggle button
+      .md-sidebar-button {
+        display: none;
+      }
 
       // [no-js]: Switch to native sticky behavior
       .no-js & {
@@ -209,9 +325,9 @@
     backdrop-filter: blur(px2rem(4px));
     opacity: 0;
     transition:
-      width     0ms 600ms,
-      height    0ms 600ms,
-      opacity 350ms 250ms;
+      width     0ms 500ms,
+      height    0ms 500ms,
+      opacity 250ms 125ms;
 
     // Show overlay when drawer is active
     [data-md-toggle="drawer"]:checked ~ & {
@@ -221,7 +337,7 @@
       transition:
         width     0ms,
         height    0ms,
-        opacity 350ms;
+        opacity 250ms;
     }
   }
 }

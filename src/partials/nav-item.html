@@ -266,27 +266,29 @@
   <!-- Currently active page -->
   {% elif nav_item.active %}
     <li class="{{ class }}">
-      {% set toc = page.toc %}
+      {% if config.theme.variant == "classic" %}
+        {% set toc = page.toc %}
 
-      <!-- State toggle -->
-      <input
-        class="md-nav__toggle md-toggle"
-        type="checkbox"
-        id="__toc"
-      />
+        <!-- State toggle -->
+        <input
+          class="md-nav__toggle md-toggle"
+          type="checkbox"
+          id="__toc"
+        />
 
-      <!-- Hack: see partials/toc.html for more information -->
-      {% set first = toc | first %}
-      {% if first and first.level == 1 %}
-        {% set toc = first.children %}
-      {% endif %}
+        <!-- Hack: see partials/toc.html for more information -->
+        {% set first = toc | first %}
+        {% if first and first.level == 1 %}
+          {% set toc = first.children %}
+        {% endif %}
 
-      <!-- Navigation link to table of contents -->
-      {% if toc %}
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          {{ render_content(nav_item) }}
-          <span class="md-nav__icon md-icon"></span>
-        </label>
+        <!-- Navigation link to table of contents -->
+        {% if toc %}
+          <label class="md-nav__link md-nav__link--active" for="__toc">
+            {{ render_content(nav_item) }}
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        {% endif %}
       {% endif %}
       <a
         href="{{ nav_item.url | url }}"

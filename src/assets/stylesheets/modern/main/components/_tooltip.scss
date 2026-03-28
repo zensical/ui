@@ -101,7 +101,7 @@
   // Inline tooltip
   &--inline {
     width: auto;
-    font-weight: 700;
+    font-weight: 400;
     user-select: none;
 
     // Tooltip is not active
@@ -112,7 +112,7 @@
     // Tooltip wrapper
     .md-tooltip__inner {
       padding: px2rem(4px) px2rem(8px);
-      font-size: px2rem(10px);
+      font-size: px2rem(11px);
     }
 
     // Hack: When the host element is hidden, the context for the tooltip is
