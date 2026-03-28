@@ -57,16 +57,16 @@
       backdrop-filter: blur(px2rem(8px));
       border-radius: px2rem(16px);
       transition:
-        transform  250ms cubic-bezier(0.5, 0, 0.5, 0),
-        box-shadow 250ms;
+        transform  200ms cubic-bezier(0.5, 0, 0.5, 0),
+        box-shadow 200ms;
       transform: translateX(0);
 
       // Show sidebar when drawer is active
       [data-md-toggle="drawer"]:checked ~ .md-container & {
         box-shadow: var(--md-shadow-z3);
         transition:
-          transform  350ms cubic-bezier(0.7, 0.7, 0.1, 1),
-          box-shadow 350ms;
+          transform  250ms cubic-bezier(0.7, 0.7, 0.1, 1),
+          box-shadow 250ms;
         transform: translateX(px2rem(250px));
 
         // Adjust for right-to-left languages
@@ -209,9 +209,9 @@
     backdrop-filter: blur(px2rem(4px));
     opacity: 0;
     transition:
-      width     0ms 600ms,
-      height    0ms 600ms,
-      opacity 350ms 250ms;
+      width     0ms 500ms,
+      height    0ms 500ms,
+      opacity 250ms 125ms;
 
     // Show overlay when drawer is active
     [data-md-toggle="drawer"]:checked ~ & {
@@ -221,7 +221,7 @@
       transition:
         width     0ms,
         height    0ms,
-        opacity 350ms;
+        opacity 250ms;
     }
   }
 }
