@@ -47,7 +47,7 @@
     {% endblock %}
     {% block styles %}
       {% if config.theme.variant == "modern" %}
-        {% set href = 'assets/stylesheets/modern/main.3c488715.min.css' | url %}
+        {% set href = 'assets/stylesheets/modern/main.3b031116.min.css' | url %}
       {% else %}
         {% set href = 'assets/stylesheets/classic/main.320d0ab1.min.css' | url %}
       {% endif %}
@@ -180,6 +180,12 @@
               {% endif %}
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" {{ hidden }}>
                 <div class="md-sidebar__scrollwrap">
+                  {% if config.theme.variant != "classic" %}
+                    <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                    <div class="md-sidebar-button__wrapper">
+                      <label class="md-sidebar-button" for="__toc"></label>
+                    </div>
+                  {% endif %}
                   <div class="md-sidebar__inner">
                     {% include "partials/toc.html" %}
                   </div>
@@ -260,7 +266,7 @@
       </script>
     {% endblock %}
     {% block scripts %}
-      <script src="{{ 'assets/javascripts/bundle.c2b142ea.min.js' | url }}"></script>
+      <script src="{{ 'assets/javascripts/bundle.66be65ca.min.js' | url }}"></script>
       {% for script in config.extra_javascript %}
         {{ script | script_tag }}
       {% endfor %}

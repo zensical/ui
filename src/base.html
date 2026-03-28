@@ -323,6 +323,16 @@
                 {{ hidden }}
               >
                 <div class="md-sidebar__scrollwrap">
+                  {% if config.theme.variant != "classic" %}
+                    <input
+                      class="md-nav__toggle md-toggle"
+                      type="checkbox"
+                      id="__toc"
+                    />
+                    <div class="md-sidebar-button__wrapper">
+                      <label class="md-sidebar-button" for="__toc"></label>
+                    </div>
+                  {% endif %}
                   <div class="md-sidebar__inner">
                     {% include "partials/toc.html" %}
                   </div>

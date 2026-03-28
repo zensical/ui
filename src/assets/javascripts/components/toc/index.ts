@@ -36,6 +36,7 @@ import {
   endWith,
   filter,
   finalize,
+  fromEvent,
   ignoreElements,
   map,
   merge,
@@ -304,6 +305,22 @@ export function mountTableOfContents(
         )
       }
     })
+
+    // Ensure clicking outside of table of contents closes it
+    const nav = getOptionalElement(".md-sidebar--secondary")
+    if (typeof nav !== "undefined") {
+      fromEvent<MouseEvent>(document.body, "click")
+        .subscribe((event) => {
+          const target = event.target as Node
+          if (!nav.contains(target)) {
+            const input = getOptionalElement<HTMLInputElement>(
+              ".md-nav__toggle", nav
+            )
+            if (typeof input !== "undefined")
+              input.checked = false
+          }
+        })
+    }
 
     // Set up following, if enabled
     if (feature("toc.follow")) {
