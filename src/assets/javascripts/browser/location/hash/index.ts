@@ -85,6 +85,7 @@ export function watchLocationHash(
       map(getLocationHash),
       startWith(getLocationHash()),
       filter(hash => hash.length > 0),
+      map(decodeURIComponent),
       shareReplay(1)
     )
 }
