@@ -43,8 +43,6 @@ import {
   merge,
   of,
   share,
-  skip,
-  startWith,
   switchMap,
   take,
   tap,
@@ -341,9 +339,7 @@ export function setupInstantNavigation(
   // reason, we fall back and use regular navigation, forcing a reload.
   const document$ =
     location$.pipe(
-      startWith(getLocation()),
       distinctUntilKeyChanged("pathname"),
-      skip(1),
       switchMap(url => requestHTML(url, { progress$ })
         .pipe(
           catchError(() => {
