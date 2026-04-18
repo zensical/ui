@@ -323,7 +323,7 @@ text.actor > tspan {
 }
 
 /* Sequence actor line */
-line {
+.actor-line {
   stroke: var(--md-mermaid-sequence-actor-line-color);
 }
 
@@ -372,7 +372,7 @@ line {
 }
 
 /* Sequence arrow head */
-#arrowhead path {
+[id$="-arrowhead"] path {
   fill: var(--md-mermaid-sequence-message-line-color);
   stroke: none;
 }
