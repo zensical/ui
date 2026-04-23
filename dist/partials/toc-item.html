@@ -4,13 +4,9 @@
 <li class="md-nav__item">
   <a href="{{ toc_item.url }}" class="md-nav__link">
     <span class="md-ellipsis">
-      {% if toc_item.typeset %}
-        <span class="md-typeset">
-          {{ toc_item.typeset.title }}
-        </span>
-      {% else %}
-        {{ toc_item.title }}
-      {% endif %}
+      <span class="md-typeset">
+        {{ toc_item.content }}
+      </span>
     </span>
   </a>
   {% if toc_item.children %}
