@@ -148,6 +148,12 @@
       }
     }
 
+    // Navigation with content that is typeset
+    .md-typeset {
+      font-size: px2rem(14px);
+      line-height: 1.3;
+    }
+
     // Navigation link icon
     svg {
       // Hack: Safari has another bug where SVGs disappear on hover - same fix
