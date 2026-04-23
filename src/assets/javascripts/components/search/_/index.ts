@@ -105,7 +105,7 @@ export function mountSearch(
       .subscribe(index => {
         // Adjust base URLs of items
         for (const item of index.items) {
-          item.location = new URL(item.location, config.base).toString()
+          item.location = new URL(`./${item.location}`, config.base).toString()
         }
         mount(index, shadow)
       })
