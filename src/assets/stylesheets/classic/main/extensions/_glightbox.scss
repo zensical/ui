@@ -27,14 +27,6 @@
 // Rules
 // ----------------------------------------------------------------------------
 
-// GLightbox variables
-:root {
-  --md-admonition-icon--mkdocstrings: svg-load("lucide/unfold-vertical.svg");
-  --md-admonition-icon--mkdocstrings-open: svg-load("lucide/fold-vertical.svg");
-}
-
-// ----------------------------------------------------------------------------
-
 // Ensure that the header does not disappear
 html.glightbox-open {
   height: 100%;
