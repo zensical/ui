@@ -49,6 +49,10 @@ import {
   mountDetails
 } from "../details"
 import {
+  GLightbox,
+  mountGLightbox
+} from "../glightbox"
+import {
   Link,
   mountLink
 } from "../link"
@@ -78,6 +82,7 @@ export type Content =
   | ContentTabs
   | DataTable
   | Details
+  | GLightbox
   | Link
   | Mermaid
   | Tooltip
@@ -132,6 +137,11 @@ export function mountContent(
     // Mermaid diagrams
     ...getElements("pre.mermaid", el)
       .map(child => mountMermaid(child)),
+
+    // GLightbox
+    mountGLightbox(
+      getElements<HTMLAnchorElement>(".glightbox", el)
+    ),
 
     // Data tables
     ...getElements("table:not([class])", el)

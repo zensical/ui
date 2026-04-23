@@ -39,7 +39,7 @@ import {
   tap
 } from "rxjs"
 
-import { watchScript } from "../../../script"
+import { watchScript } from "../../../asset"
 
 /* ----------------------------------------------------------------------------
  * Types
