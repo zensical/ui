@@ -182,10 +182,11 @@
       }
     }
 
-    // Styles for primary navigation
+    // Styles for secondary navigation
     .md-nav--secondary & {
       padding: px2rem(7px) px2rem(16px);
       margin-inline: px2rem(4px);
+      overflow-wrap: initial;
 
       // Navigation link on focus/hover
       &:is([href], [for]):is(:focus, :hover) {
