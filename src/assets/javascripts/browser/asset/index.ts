@@ -71,3 +71,31 @@ export function watchScript(src: string): Observable<void> {
       )
   })
 }
+
+/**
+ * Create and load a `link[rel=stylesheet]` element
+ *
+ * This function returns an observable that will emit when the stylesheet was
+ * successfully loaded, or throw an error if it wasn't.
+ *
+ * @param href - Stylesheet URL
+ *
+ * @returns Style observable
+ */
+export function watchStyles(href: string): Observable<void> {
+  const link = h("link", { rel: "stylesheet", href })
+  document.head.appendChild(link)
+  return merge(
+    fromEvent(link, "load"),
+    fromEvent(link, "error")
+      .pipe(
+        switchMap(() => (
+          throwError(() => new ReferenceError(`Invalid styles: ${href}`))
+        ))
+      )
+  )
+    .pipe(
+      map(() => undefined),
+      take(1)
+    )
+}

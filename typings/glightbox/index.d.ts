@@ -23,12 +23,11 @@
  * IN THE SOFTWARE.
  */
 
-export * from "./_"
-export * from "./annotation"
-export * from "./code"
-export * from "./details"
-export * from "./glightbox"
-export * from "./link"
-export * from "./mermaid"
-export * from "./table"
-export * from "./tabs"
+/* ----------------------------------------------------------------------------
+ * Global types
+ * ------------------------------------------------------------------------- */
+
+declare const GLightbox: any
+
+declare const GLightboxOptions: any
+
