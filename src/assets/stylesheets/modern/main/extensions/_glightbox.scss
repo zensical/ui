@@ -36,6 +36,11 @@ html.glightbox-open {
 // GLightbox
 html .gslide {
 
+  // Image background
+  .gslide-image img {
+    background: var(--md-default-bg-color);
+  }
+
   // Description background
   .gslide-description {
     background: var(--md-default-bg-color);
