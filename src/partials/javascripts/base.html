@@ -31,6 +31,8 @@
 
   /* Compute base path once to integrate with instant loading */
   __md_scope = new URL("{{ config.extra.scope | d(base_url, true) }}", location)
+  if (!__md_scope.pathname.endsWith("/"))
+    __md_scope = new URL(__md_scope.pathname + "/", location)
 
   /* Compute hash from the given string - see https://bit.ly/3pvPjXG */
   __md_hash = v => [...v].reduce((h, c) => (h << 5) - h + c.charCodeAt(0), 0)
