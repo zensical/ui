@@ -10,14 +10,9 @@
     <span class="{{ class }}"></span>
   {% endif %}
 {% endmacro %}
-{% macro render_title(nav_item) %}
-  {% if nav_item.typeset %}
-    <span class="md-typeset">
-      {{ nav_item.typeset.title }}
-    </span>
-  {% else %}
-    {{ nav_item.title }}
-  {% endif %}
+{% macro render_title(nav_item, ref) %}
+  {% set ref = ref or nav_item %}
+  {{ ref.title or nav_item.title }}
 {% endmacro %}
 {% macro render_content(nav_item, ref) %}
   {% set ref = ref or nav_item %}
@@ -25,7 +20,7 @@
     {% include ".icons/" ~ nav_item.meta.icon ~ ".svg" %}
   {% endif %}
   <span class="md-ellipsis">
-    {{ render_title(ref) }}
+    {{ render_title(nav_item, ref) }}
     {% if nav_item.meta and nav_item.meta.subtitle %}
       <br>
       <small>{{ nav_item.meta.subtitle }}</small>

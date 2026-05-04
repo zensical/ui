@@ -42,18 +42,9 @@
 {% endmacro %}
 
 <!-- Render navigation link title -->
-{% macro render_title(nav_item) %}
-
-  <!-- Typeset title -->
-  {% if nav_item.typeset %}
-    <span class="md-typeset">
-      {{ nav_item.typeset.title }}
-    </span>
-
-  <!-- Regular title -->
-  {% else %}
-    {{ nav_item.title }}
-  {% endif %}
+{% macro render_title(nav_item, ref) %}
+  {% set ref = ref or nav_item %}
+  {{ ref.title or nav_item.title }}
 {% endmacro %}
 
 <!-- Render navigation link content -->
@@ -67,7 +58,7 @@
 
   <!-- Navigation link title -->
   <span class="md-ellipsis">
-    {{ render_title(ref) }}
+    {{ render_title(nav_item, ref) }}
 
     <!-- Navigation link subtitle -->
     {% if nav_item.meta and nav_item.meta.subtitle %}
