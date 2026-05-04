@@ -43,17 +43,7 @@
 
 <!-- Render navigation link title -->
 {% macro render_title(nav_item) %}
-
-  <!-- Typeset title -->
-  {% if nav_item.typeset %}
-    <span class="md-typeset">
-      {{ nav_item.typeset.title }}
-    </span>
-
-  <!-- Regular title -->
-  {% else %}
-    {{ nav_item.title }}
-  {% endif %}
+  {{ nav_item.title }}
 {% endmacro %}
 
 <!-- Render navigation link content -->

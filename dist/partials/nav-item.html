@@ -11,13 +11,7 @@
   {% endif %}
 {% endmacro %}
 {% macro render_title(nav_item) %}
-  {% if nav_item.typeset %}
-    <span class="md-typeset">
-      {{ nav_item.typeset.title }}
-    </span>
-  {% else %}
-    {{ nav_item.title }}
-  {% endif %}
+  {{ nav_item.title }}
 {% endmacro %}
 {% macro render_content(nav_item, ref) %}
   {% set ref = ref or nav_item %}
