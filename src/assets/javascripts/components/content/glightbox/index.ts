@@ -24,7 +24,9 @@
  */
 
 import {
+  EMPTY,
   Observable,
+  catchError,
   forkJoin,
   map,
   of,
@@ -70,7 +72,7 @@ function fetchAssets(): Observable<void> {
         watchScript("https://unpkg.com/glightbox@3/dist/js/glightbox.min.js"),
         watchStyles("https://unpkg.com/glightbox@3/dist/css/glightbox.min.css")
       ]).
-        pipe(map(() => undefined))
+        pipe(catchError(() => EMPTY), map(() => undefined))
     : of(undefined)
 }
 

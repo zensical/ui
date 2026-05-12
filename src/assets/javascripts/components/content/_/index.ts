@@ -139,9 +139,9 @@ export function mountContent(
       .map(child => mountMermaid(child)),
 
     // GLightbox
-    mountGLightbox(
-      getElements<HTMLAnchorElement>(".glightbox", el)
-    ),
+    ...[getElements<HTMLAnchorElement>(".glightbox", el)]
+      .filter(els => els.length > 0)
+      .map(els => mountGLightbox(els)),
 
     // Data tables
     ...getElements("table:not([class])", el)
