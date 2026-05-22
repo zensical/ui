@@ -27,12 +27,11 @@ import {
   EMPTY,
   Observable,
   catchError,
-  forkJoin,
+  fromEvent,
   map,
   of,
   shareReplay,
-  switchMap,
-  tap
+  switchMap
 } from "rxjs"
 
 import { Component } from "../../_"
@@ -66,14 +65,21 @@ let glightbox$: Observable<any>
  *
  * @returns GLightbox assets observable
  */
-function fetchAssets(): Observable<void> {
+function fetchScripts(): Observable<void> {
   return typeof GLightbox === "undefined" || GLightbox instanceof Element
-    ? forkJoin([
-        watchScript("https://unpkg.com/glightbox@3/dist/js/glightbox.min.js"),
-        watchStyles("https://unpkg.com/glightbox@3/dist/css/glightbox.min.css")
-      ]).
-        pipe(catchError(() => EMPTY), map(() => undefined))
+    ? watchScript("https://unpkg.com/glightbox@3/dist/js/glightbox.min.js")
+        .pipe(catchError(() => EMPTY), map(() => undefined))
     : of(undefined)
+}
+
+/**
+ * Fetch GLightbox styles
+ * 
+ * @returns GLightbox styles observable
+ */
+function fetchStyles(): Observable<void> {
+  return watchStyles("https://unpkg.com/glightbox@3/dist/css/glightbox.min.css")
+    .pipe(catchError(() => EMPTY), map(() => undefined))
 }
 
 /* ----------------------------------------------------------------------------
@@ -90,7 +96,7 @@ function fetchAssets(): Observable<void> {
 export function mountGLightbox(
   els: HTMLAnchorElement[]
 ): Observable<Component<GLightbox>> {
-  glightbox$ ||= fetchAssets()
+  glightbox$ ||= fetchScripts()
     .pipe(
       map(() => new GLightbox({
         touchNavigation: true,
@@ -116,14 +122,18 @@ export function mountGLightbox(
       shareReplay(1)
     )
 
-  // Add elements to lightbox
-  glightbox$.pipe(
-    tap(gallery => gallery.setElements(els))
-  )
-
   // Create and return component
-  return glightbox$
+  return fetchStyles().pipe(switchMap(() => glightbox$))
     .pipe(
-      switchMap(() => els.map(el => ({ ref: el })))
+      switchMap(gallery => {
+        gallery.setElements(els)
+        return els.map((el, index) => {
+          fromEvent(el, "click").subscribe(ev => {
+            ev.preventDefault()
+            gallery.openAt(index)
+          })
+          return { ref: el }
+        })
+      })
     )
 }
