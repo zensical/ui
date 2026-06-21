@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -23,18 +23,18 @@
  * IN THE SOFTWARE.
  */
 
-export * from "./_"
-export * from "./announce"
-export * from "./consent"
-export * from "./content"
-export * from "./dialog"
-export * from "./header"
-export * from "./main"
-export * from "./palette"
-export * from "./progress"
-export * from "./search"
-export * from "./sidebar"
-export * from "./source"
-export * from "./tabs"
-export * from "./toc"
-export * from "./top"
+export * from "./_";
+export * from "./announce";
+export * from "./consent";
+export * from "./content";
+export * from "./dialog";
+export * from "./header";
+export * from "./main";
+export * from "./palette";
+export * from "./progress";
+export * from "./search";
+export * from "./sidebar";
+export * from "./source";
+export * from "./tabs";
+export * from "./toc";
+export * from "./top";

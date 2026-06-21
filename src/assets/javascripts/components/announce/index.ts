@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -31,13 +31,13 @@ import {
   finalize,
   fromEvent,
   map,
-  tap
-} from "rxjs"
+  tap,
+} from "rxjs";
 
-import { feature } from "~/_"
-import { getElement } from "~/browser"
+import { feature } from "~/_";
+import { getElement } from "~/browser";
 
-import { Component } from "../_"
+import { Component } from "../_";
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -47,7 +47,7 @@ import { Component } from "../_"
  * Announcement bar
  */
 export interface Announce {
-  hash: number                        // Content hash
+  hash: number; // Content hash
 }
 
 /* ----------------------------------------------------------------------------
@@ -61,15 +61,12 @@ export interface Announce {
  *
  * @returns Announcement bar observable
  */
-export function watchAnnounce(
-  el: HTMLElement
-): Observable<Announce> {
-  const button = getElement(".md-typeset > :first-child", el)
-  return fromEvent(button, "click", { once: true })
-    .pipe(
-      map(() => getElement(".md-typeset", el)),
-      map(content => ({ hash: __md_hash(content.innerHTML) }))
-    )
+export function watchAnnounce(el: HTMLElement): Observable<Announce> {
+  const button = getElement(".md-typeset > :first-child", el);
+  return fromEvent(button, "click", { once: true }).pipe(
+    map(() => getElement(".md-typeset", el)),
+    map((content) => ({ hash: __md_hash(content.innerHTML) })),
+  );
 }
 
 /**
@@ -80,34 +77,32 @@ export function watchAnnounce(
  * @returns Announcement bar component observable
  */
 export function mountAnnounce(
-  el: HTMLElement
+  el: HTMLElement,
 ): Observable<Component<Announce>> {
-  if (!feature("announce.dismiss") || !el.childElementCount)
-    return EMPTY
+  if (!feature("announce.dismiss") || !el.childElementCount) return EMPTY;
 
   // Support instant navigation - see https://t.ly/3FTme
   if (!el.hidden) {
-    const content = getElement(".md-typeset", el)
+    const content = getElement(".md-typeset", el);
     if (__md_hash(content.innerHTML) === __md_get("__announce"))
-      el.hidden = true
+      el.hidden = true;
   }
 
   // Mount component on subscription
   return defer(() => {
-    const push$ = new Subject<Announce>()
+    const push$ = new Subject<Announce>();
     push$.subscribe(({ hash }) => {
-      el.hidden = true
+      el.hidden = true;
 
       // Persist preference in local storage
-      __md_set<number>("__announce", hash)
-    })
+      __md_set<number>("__announce", hash);
+    });
 
     // Create and return component
-    return watchAnnounce(el)
-      .pipe(
-        tap(state => push$.next(state)),
-        finalize(() => push$.complete()),
-        map(state => ({ ref: el, ...state }))
-      )
-  })
+    return watchAnnounce(el).pipe(
+      tap((state) => push$.next(state)),
+      finalize(() => push$.complete()),
+      map((state) => ({ ref: el, ...state })),
+    );
+  });
 }

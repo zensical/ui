@@ -1,5 +1,5 @@
 ////
-/// Copyright (c) 2025 Zensical and contributors
+/// Copyright (c) 2025-2026 Zensical and contributors
 ///
 /// SPDX-License-Identifier: MIT
 /// Third-party contributions licensed under DCO
@@ -71,7 +71,6 @@ body {
 
   // Body in locked state
   &[data-md-scrolllock] {
-
     // [tablet portrait -]: Omit scroll bubbling
     @include break-to-device(tablet portrait) {
       position: fixed;
@@ -171,7 +170,7 @@ body {
     opacity: 1;
     transition:
       transform 250ms cubic-bezier(0.4, 0, 0.2, 1),
-      opacity   175ms 75ms;
+      opacity 175ms 75ms;
     transform: translateY(0);
   }
 }

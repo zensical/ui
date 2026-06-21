@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -23,5 +23,5 @@
  * IN THE SOFTWARE.
  */
 
-export * from "./_"
-export * from "./title"
+export * from "./_";
+export * from "./title";

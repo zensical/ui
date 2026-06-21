@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -38,17 +38,20 @@
  * @returns Elements
  */
 export function getElements<T extends keyof HTMLElementTagNameMap>(
-  selector: T, node?: ParentNode
-): HTMLElementTagNameMap[T][]
+  selector: T,
+  node?: ParentNode,
+): HTMLElementTagNameMap[T][];
 
 export function getElements<T extends HTMLElement>(
-  selector: string, node?: ParentNode
-): T[]
+  selector: string,
+  node?: ParentNode,
+): T[];
 
 export function getElements<T extends HTMLElement>(
-  selector: string, node: ParentNode = document
+  selector: string,
+  node: ParentNode = document,
 ): T[] {
-  return Array.from(node.querySelectorAll<T>(selector))
+  return Array.from(node.querySelectorAll<T>(selector));
 }
 
 /**
@@ -65,24 +68,27 @@ export function getElements<T extends HTMLElement>(
  * @returns Element
  */
 export function getElement<T extends keyof HTMLElementTagNameMap>(
-  selector: T, node?: ParentNode
-): HTMLElementTagNameMap[T]
+  selector: T,
+  node?: ParentNode,
+): HTMLElementTagNameMap[T];
 
 export function getElement<T extends HTMLElement>(
-  selector: string, node?: ParentNode
-): T
+  selector: string,
+  node?: ParentNode,
+): T;
 
 export function getElement<T extends HTMLElement>(
-  selector: string, node: ParentNode = document
+  selector: string,
+  node: ParentNode = document,
 ): T {
-  const el = getOptionalElement<T>(selector, node)
+  const el = getOptionalElement<T>(selector, node);
   if (typeof el === "undefined")
     throw new ReferenceError(
-      `Missing element: expected "${selector}" to be present`
-    )
+      `Missing element: expected "${selector}" to be present`,
+    );
 
   // Return element
-  return el
+  return el;
 }
 
 // -------------------------------------------------------------------------
@@ -98,17 +104,20 @@ export function getElement<T extends HTMLElement>(
  * @returns Element or nothing
  */
 export function getOptionalElement<T extends keyof HTMLElementTagNameMap>(
-  selector: T, node?: ParentNode
-): HTMLElementTagNameMap[T] | undefined
+  selector: T,
+  node?: ParentNode,
+): HTMLElementTagNameMap[T] | undefined;
 
 export function getOptionalElement<T extends HTMLElement>(
-  selector: string, node?: ParentNode
-): T | undefined
+  selector: string,
+  node?: ParentNode,
+): T | undefined;
 
 export function getOptionalElement<T extends HTMLElement>(
-  selector: string, node: ParentNode = document
+  selector: string,
+  node: ParentNode = document,
 ): T | undefined {
-  return node.querySelector<T>(selector) || undefined
+  return node.querySelector<T>(selector) || undefined;
 }
 
 /**
@@ -118,8 +127,8 @@ export function getOptionalElement<T extends HTMLElement>(
  */
 export function getActiveElement(): HTMLElement | undefined {
   return (
-    document.activeElement?.shadowRoot?.activeElement as HTMLElement ??
-    document.activeElement as HTMLElement ??
+    (document.activeElement?.shadowRoot?.activeElement as HTMLElement) ??
+    (document.activeElement as HTMLElement) ??
     undefined
-  )
+  );
 }
