@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Zensical and contributors
+# Copyright (c) 2025-2026 Zensical and contributors
 
 # SPDX-License-Identifier: MIT
 # Third-party contributions licensed under DCO
@@ -21,7 +21,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-[changeset.scopes]
+[scopes]
 templates = "src/**"
 scripts = "src/assets/javascripts/**"
 modern = "src/assets/stylesheets/modern/**"

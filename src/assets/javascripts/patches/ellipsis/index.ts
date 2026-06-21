@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -33,16 +33,12 @@ import {
   skip,
   switchMap,
   take,
-  takeUntil
-} from "rxjs"
+  takeUntil,
+} from "rxjs";
 
-import { feature } from "~/_"
-import {
-  Viewport,
-  getElements,
-  watchElementVisibility
-} from "~/browser"
-import { mountInlineTooltip2 } from "~/components/tooltip2"
+import { feature } from "~/_";
+import { Viewport, getElements, watchElementVisibility } from "~/browser";
+import { mountInlineTooltip2 } from "~/components/tooltip2";
 
 /* ----------------------------------------------------------------------------
  * Helper types
@@ -52,8 +48,8 @@ import { mountInlineTooltip2 } from "~/components/tooltip2"
  * Patch options
  */
 interface PatchOptions {
-  document$: Observable<Document>      // Document observable
-  viewport$: Observable<Viewport>      // Viewport observable
+  document$: Observable<Document>; // Document observable
+  viewport$: Observable<Viewport>; // Viewport observable
 }
 
 /* ----------------------------------------------------------------------------
@@ -70,46 +66,42 @@ interface PatchOptions {
  *
  * @param options - Options
  */
-export function patchEllipsis(
-  { document$, viewport$ }: PatchOptions
-): void {
+export function patchEllipsis({ document$, viewport$ }: PatchOptions): void {
   document$
     .pipe(
       switchMap(() => getElements(".md-ellipsis")),
-      mergeMap(el => watchElementVisibility(el)
-        .pipe(
+      mergeMap((el) =>
+        watchElementVisibility(el).pipe(
           takeUntil(document$.pipe(skip(1))),
-          filter(visible => visible),
+          filter((visible) => visible),
           map(() => el),
-          take(1)
-        )
+          take(1),
+        ),
       ),
-      filter(el => el.offsetWidth < el.scrollWidth),
-      mergeMap(el => {
-        const text = el.innerText
-        const host = el.closest("a") || el
-        host.title = text
+      filter((el) => el.offsetWidth < el.scrollWidth),
+      mergeMap((el) => {
+        const text = el.innerText;
+        const host = el.closest("a") || el;
+        host.title = text;
 
         // Do not mount improved tooltip if feature is disabled
-        if (!feature("content.tooltips"))
-          return EMPTY
+        if (!feature("content.tooltips")) return EMPTY;
 
         // Mount tooltip
-        return mountInlineTooltip2(host, { viewport$ })
-          .pipe(
-            takeUntil(document$.pipe(skip(1))),
-            finalize(() => host.removeAttribute("title"))
-          )
-      })
+        return mountInlineTooltip2(host, { viewport$ }).pipe(
+          takeUntil(document$.pipe(skip(1))),
+          finalize(() => host.removeAttribute("title")),
+        );
+      }),
     )
-      .subscribe()
+    .subscribe();
 
   // @todo move this outside of here and fix memleaks
   if (feature("content.tooltips"))
     document$
       .pipe(
         switchMap(() => getElements(".md-status")),
-        mergeMap(el => mountInlineTooltip2(el, { viewport$ }))
+        mergeMap((el) => mountInlineTooltip2(el, { viewport$ })),
       )
-        .subscribe()
+      .subscribe();
 }

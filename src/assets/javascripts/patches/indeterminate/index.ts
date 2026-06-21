@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -31,10 +31,10 @@ import {
   switchMap,
   takeWhile,
   tap,
-  withLatestFrom
-} from "rxjs"
+  withLatestFrom,
+} from "rxjs";
 
-import { getElements } from "~/browser"
+import { getElements } from "~/browser";
 
 /* ----------------------------------------------------------------------------
  * Helper types
@@ -44,8 +44,8 @@ import { getElements } from "~/browser"
  * Patch options
  */
 interface PatchOptions {
-  document$: Observable<Document>      // Document observable
-  tablet$: Observable<boolean>         // Media tablet observable
+  document$: Observable<Document>; // Document observable
+  tablet$: Observable<boolean>; // Media tablet observable
 }
 
 /* ----------------------------------------------------------------------------
@@ -60,29 +60,26 @@ interface PatchOptions {
  *
  * @param options - Options
  */
-export function patchIndeterminate(
-  { document$, tablet$ }: PatchOptions
-): void {
+export function patchIndeterminate({ document$, tablet$ }: PatchOptions): void {
   document$
     .pipe(
-      switchMap(() => getElements<HTMLInputElement>(
-        ".md-toggle--indeterminate"
-      )),
-      tap(el => {
-        el.indeterminate = true
-        el.checked = false
-      }),
-      mergeMap(el => fromEvent(el, "change")
-        .pipe(
-          takeWhile(() => el.classList.contains("md-toggle--indeterminate")),
-          map(() => el)
-        )
+      switchMap(() =>
+        getElements<HTMLInputElement>(".md-toggle--indeterminate"),
       ),
-      withLatestFrom(tablet$)
+      tap((el) => {
+        el.indeterminate = true;
+        el.checked = false;
+      }),
+      mergeMap((el) =>
+        fromEvent(el, "change").pipe(
+          takeWhile(() => el.classList.contains("md-toggle--indeterminate")),
+          map(() => el),
+        ),
+      ),
+      withLatestFrom(tablet$),
     )
-      .subscribe(([el, tablet]) => {
-        el.classList.remove("md-toggle--indeterminate")
-        if (tablet)
-          el.checked = false
-      })
+    .subscribe(([el, tablet]) => {
+      el.classList.remove("md-toggle--indeterminate");
+      if (tablet) el.checked = false;
+    });
 }

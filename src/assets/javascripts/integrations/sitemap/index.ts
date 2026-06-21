@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -23,19 +23,9 @@
  * IN THE SOFTWARE.
  */
 
-import {
-  Observable,
-  catchError,
-  map,
-  of,
-  share
-} from "rxjs"
+import { Observable, catchError, map, of, share } from "rxjs";
 
-import {
-  getElement,
-  getElements,
-  requestXML
-} from "~/browser"
+import { getElement, getElements, requestXML } from "~/browser";
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -44,7 +34,7 @@ import {
 /**
  * Sitemap, i.e. a list of URLs
  */
-export type Sitemap = Map<string, URL[]>
+export type Sitemap = Map<string, URL[]>;
 
 /* ----------------------------------------------------------------------------
  * Helper functions
@@ -64,12 +54,12 @@ export type Sitemap = Map<string, URL[]>
  * @returns Resolved URL
  */
 function resolve(url: URL, base: URL) {
-  url.protocol = base.protocol
-  url.hostname = base.hostname
+  url.protocol = base.protocol;
+  url.hostname = base.hostname;
   if (base.port) {
-    url.port = base.port
+    url.port = base.port;
   }
-  return url
+  return url;
 }
 
 /**
@@ -98,24 +88,23 @@ function resolve(url: URL, base: URL) {
  * @returns Sitemap
  */
 function extract(document: Document, base: URL): Sitemap {
-  const sitemap: Sitemap = new Map()
+  const sitemap: Sitemap = new Map();
   for (const el of getElements("url", document)) {
-    const url = getElement("loc", el)
+    const url = getElement("loc", el);
 
     // Create entry for location and add it to the list of links
-    const links = [resolve(new URL(url.textContent!), base)]
-    sitemap.set(`${links[0]}`, links)
+    const links = [resolve(new URL(url.textContent!), base)];
+    sitemap.set(`${links[0]}`, links);
 
     // Attach alternate links to current entry
     for (const link of getElements("[rel=alternate]", el)) {
-      const href = link.getAttribute("href")
-      if (href != null)
-        links.push(resolve(new URL(href), base))
+      const href = link.getAttribute("href");
+      if (href != null) links.push(resolve(new URL(href), base));
     }
   }
 
   // Return sitemap
-  return sitemap
+  return sitemap;
 }
 
 /* ----------------------------------------------------------------------------
@@ -133,10 +122,9 @@ function extract(document: Document, base: URL): Sitemap {
  * @returns Sitemap observable
  */
 export function fetchSitemap(base: URL | string): Observable<Sitemap> {
-  return requestXML(new URL("sitemap.xml", base))
-    .pipe(
-      map(document => extract(document, new URL(base))),
-      catchError(() => of(new Map())),
-      share()
-    )
+  return requestXML(new URL("sitemap.xml", base)).pipe(
+    map((document) => extract(document, new URL(base))),
+    catchError(() => of(new Map())),
+    share(),
+  );
 }

@@ -1,5 +1,5 @@
 ////
-/// Copyright (c) 2025 Zensical and contributors
+/// Copyright (c) 2025-2026 Zensical and contributors
 ///
 /// SPDX-License-Identifier: MIT
 /// Third-party contributions licensed under DCO
@@ -29,14 +29,14 @@
 
 // Code block
 .highlight {
-
   // .o  = Operator
   // .ow = Operator, word
   :is(.o, .ow) {
     color: var(--md-code-hl-operator-color);
   }
 
-  .p {  // Punctuation
+  .p {
+    // Punctuation
     color: var(--md-code-hl-punctuation-color);
   }
 
@@ -151,11 +151,13 @@
     border-radius: px2rem(2px);
   }
 
-  .gd { // Diff, delete
+  .gd {
+    // Diff, delete
     background-color: var(--md-typeset-del-color);
   }
 
-  .gi { // Diff, insert
+  .gi {
+    // Diff, insert
     background-color: var(--md-typeset-ins-color);
   }
 
@@ -332,7 +334,6 @@
 
 // Scoped in typesetted content to match specificity of regular content
 .md-typeset {
-
   // Code block with line numbers - unfortunately, these selectors need to be
   // overly specific so they don't bleed into code blocks in annotations.
   .highlighttable {
@@ -371,7 +372,6 @@
 
 // [mobile -]: Align with body copy
 @include break-to-device(mobile) {
-
   // Top-level code block
   .md-content__inner > .highlight {
     margin: 1em px2rem(-16px);

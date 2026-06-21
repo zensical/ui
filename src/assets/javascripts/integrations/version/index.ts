@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -33,25 +33,17 @@ import {
   map,
   of,
   switchMap,
-  withLatestFrom
-} from "rxjs"
+  withLatestFrom,
+} from "rxjs";
 
-import { configuration } from "~/_"
-import {
-  getElement,
-  getLocation,
-  requestJSON,
-  setLocation
-} from "~/browser"
-import { getComponentElements } from "~/components"
-import {
-  Version,
-  renderVersionSelector
-} from "~/templates"
+import { configuration } from "~/_";
+import { getElement, getLocation, requestJSON, setLocation } from "~/browser";
+import { getComponentElements } from "~/components";
+import { Version, renderVersionSelector } from "~/templates";
 
-import { fetchSitemap } from "../sitemap"
+import { fetchSitemap } from "../sitemap";
 
-import { selectedVersionCorrespondingURL } from "./findurl"
+import { selectedVersionCorrespondingURL } from "./findurl";
 
 /* ----------------------------------------------------------------------------
  * Helper types
@@ -61,7 +53,7 @@ import { selectedVersionCorrespondingURL } from "./findurl"
  * Setup options
  */
 interface SetupOptions {
-  document$: Subject<Document>         // Document subject
+  document$: Subject<Document>; // Document subject
 }
 
 /* ----------------------------------------------------------------------------
@@ -73,44 +65,48 @@ interface SetupOptions {
  *
  * @param options - Options
  */
-export function setupVersionSelector(
-  { document$ }: SetupOptions
-): void {
-  const config = configuration()
+export function setupVersionSelector({ document$ }: SetupOptions): void {
+  const config = configuration();
   const versions$ = requestJSON<Version[]>(
-    new URL("../versions.json", config.base)
-  )
-    .pipe(
-      catchError(() => EMPTY) // @todo refactor instant loading
-    )
+    new URL("../versions.json", config.base),
+  ).pipe(
+    catchError(() => EMPTY), // @todo refactor instant loading
+  );
 
   // Determine current version
-  const current$ = versions$
-    .pipe(
-      map(versions => {
-        const [, current] = config.base.match(/([^/]+)\/?$/)!
-        return versions.find(({ version, aliases }) => (
-          version === current || aliases.includes(current)
-        )) || versions[0]
-      })
-    )
+  const current$ = versions$.pipe(
+    map((versions) => {
+      const [, current] = config.base.match(/([^/]+)\/?$/)!;
+      return (
+        versions.find(
+          ({ version, aliases }) =>
+            version === current || aliases.includes(current),
+        ) || versions[0]
+      );
+    }),
+  );
 
   // Intercept inter-version navigation
   versions$
     .pipe(
-      map(versions => new Map(versions.map(version => [
-        `${new URL(`../${version.version}/`, config.base)}`,
-        version
-      ]))),
-      switchMap(urls => fromEvent<MouseEvent>(document.body, "click")
-        .pipe(
-          filter(ev => !ev.metaKey && !ev.ctrlKey),
+      map(
+        (versions) =>
+          new Map(
+            versions.map((version) => [
+              `${new URL(`../${version.version}/`, config.base)}`,
+              version,
+            ]),
+          ),
+      ),
+      switchMap((urls) =>
+        fromEvent<MouseEvent>(document.body, "click").pipe(
+          filter((ev) => !ev.metaKey && !ev.ctrlKey),
           withLatestFrom(current$),
           switchMap(([ev, current]) => {
             if (ev.target instanceof Element) {
-              const el = ev.target.closest("a")
+              const el = ev.target.closest("a");
               if (el && !el.target && urls.has(el.href)) {
-                const url = el.href
+                const url = el.href;
                 // This is a temporary hack to detect if a version inside the
                 // version selector or on another part of the site was clicked.
                 // If we're inside the version selector, we definitely want to
@@ -120,73 +116,68 @@ export function setupVersionSelector(
                 // interfere with instant navigation. We need to refactor this
                 // at some point together with instant navigation.
                 if (!ev.target.closest(".md-version")) {
-                  const version = urls.get(url)!
-                  if (version === current)
-                    return EMPTY
+                  const version = urls.get(url)!;
+                  if (version === current) return EMPTY;
                 }
-                ev.preventDefault()
-                return of(new URL(url))
+                ev.preventDefault();
+                return of(new URL(url));
               }
             }
-            return EMPTY
+            return EMPTY;
           }),
-          switchMap(selectedVersionBaseURL => {
+          switchMap((selectedVersionBaseURL) => {
             return fetchSitemap(selectedVersionBaseURL).pipe(
               map(
-                sitemap =>
+                (sitemap) =>
                   selectedVersionCorrespondingURL({
                     selectedVersionSitemap: sitemap,
                     selectedVersionBaseURL,
                     currentLocation: getLocation(),
-                    currentBaseURL: config.base
+                    currentBaseURL: config.base,
                   }) ?? selectedVersionBaseURL,
               ),
-            )
-          })
-        )
-      )
+            );
+          }),
+        ),
+      ),
     )
-      .subscribe(url => setLocation(url, true))
+    .subscribe((url) => setLocation(url, true));
 
   // Render version selector and warning
-  combineLatest([versions$, current$])
-    .subscribe(([versions, current]) => {
-      const topic = getElement(".md-header__topic")
-      topic.appendChild(renderVersionSelector(versions, current))
-    })
+  combineLatest([versions$, current$]).subscribe(([versions, current]) => {
+    const topic = getElement(".md-header__topic");
+    topic.appendChild(renderVersionSelector(versions, current));
+  });
 
   // Integrate outdated version banner with instant navigation
-  document$.pipe(switchMap(() => current$))
-    .subscribe(current => {
+  document$.pipe(switchMap(() => current$)).subscribe((current) => {
+    // Always scope outdate version banner to the base URL of the site
+    const base = new URL(config.base);
 
-      // Always scope outdate version banner to the base URL of the site
-      const base = new URL(config.base)
+    // Check if version state was already determined
+    let outdated = __md_get("__outdated", sessionStorage, base);
+    if (outdated === null) {
+      outdated = true;
 
-      // Check if version state was already determined
-      let outdated = __md_get("__outdated", sessionStorage, base)
-      if (outdated === null) {
-        outdated = true
+      // Obtain and normalize default versions
+      let ignored = config.version?.default || "latest";
+      if (!Array.isArray(ignored)) ignored = [ignored];
 
-        // Obtain and normalize default versions
-        let ignored = config.version?.default || "latest"
-        if (!Array.isArray(ignored))
-          ignored = [ignored]
+      // Check if version is considered a default
+      main: for (const ignore of ignored)
+        for (const version of current.aliases.concat(current.version))
+          if (new RegExp(ignore, "i").test(version)) {
+            outdated = false;
+            break main;
+          }
 
-        // Check if version is considered a default
-        main: for (const ignore of ignored)
-          for (const version of current.aliases.concat(current.version))
-            if (new RegExp(ignore, "i").test(version)) {
-              outdated = false
-              break main
-            }
+      // Persist version state in session storage
+      __md_set("__outdated", outdated, sessionStorage, base);
+    }
 
-        // Persist version state in session storage
-        __md_set("__outdated", outdated, sessionStorage, base)
-      }
-
-      // Unhide outdated version banner
-      if (outdated)
-        for (const warning of getComponentElements("outdated"))
-          warning.hidden = false
-    })
+    // Unhide outdated version banner
+    if (outdated)
+      for (const warning of getComponentElements("outdated"))
+        warning.hidden = false;
+  });
 }

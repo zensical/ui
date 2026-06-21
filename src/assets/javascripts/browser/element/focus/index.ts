@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -31,10 +31,10 @@ import {
   map,
   merge,
   shareReplay,
-  startWith
-} from "rxjs"
+  startWith,
+} from "rxjs";
 
-import { getActiveElement } from "../_"
+import { getActiveElement } from "../_";
 
 /* ----------------------------------------------------------------------------
  * Data
@@ -53,14 +53,13 @@ import { getActiveElement } from "../_"
  */
 const observer$ = merge(
   fromEvent(document.body, "focusin"),
-  fromEvent(document.body, "focusout")
-)
-  .pipe(
-    debounceTime(1),
-    startWith(undefined),
-    map(() => getActiveElement() || document.body),
-    shareReplay(1)
-  )
+  fromEvent(document.body, "focusout"),
+).pipe(
+  debounceTime(1),
+  startWith(undefined),
+  map(() => getActiveElement() || document.body),
+  shareReplay(1),
+);
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -73,12 +72,9 @@ const observer$ = merge(
  *
  * @returns Element focus observable
  */
-export function watchElementFocus(
-  el: HTMLElement
-): Observable<boolean> {
-  return observer$
-    .pipe(
-      map(active => el.contains(active)),
-      distinctUntilChanged()
-    )
+export function watchElementFocus(el: HTMLElement): Observable<boolean> {
+  return observer$.pipe(
+    map((active) => el.contains(active)),
+    distinctUntilChanged(),
+  );
 }

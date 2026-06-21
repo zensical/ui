@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -29,15 +29,12 @@ import {
   distinctUntilChanged,
   distinctUntilKeyChanged,
   map,
-  switchMap
-} from "rxjs"
+  switchMap,
+} from "rxjs";
 
-import {
-  Viewport,
-  watchElementSize
-} from "~/browser"
+import { Viewport, watchElementSize } from "~/browser";
 
-import { Header } from "../header"
+import { Header } from "../header";
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -47,9 +44,9 @@ import { Header } from "../header"
  * Main area
  */
 export interface Main {
-  offset: number                       // Main area top offset
-  height: number                       // Main area visible height
-  active: boolean                      // Main area is active
+  offset: number; // Main area top offset
+  height: number; // Main area visible height
+  active: boolean; // Main area is active
 }
 
 /* ----------------------------------------------------------------------------
@@ -60,8 +57,8 @@ export interface Main {
  * Watch options
  */
 interface WatchOptions {
-  viewport$: Observable<Viewport>      // Viewport observable
-  header$: Observable<Header>          // Header observable
+  viewport$: Observable<Viewport>; // Viewport observable
+  header$: Observable<Header>; // Header observable
 }
 
 /* ----------------------------------------------------------------------------
@@ -81,48 +78,55 @@ interface WatchOptions {
  * @returns Main area observable
  */
 export function watchMain(
-  el: HTMLElement, { viewport$, header$ }: WatchOptions
+  el: HTMLElement,
+  { viewport$, header$ }: WatchOptions,
 ): Observable<Main> {
-
   // Compute necessary adjustment for header
-  const adjust$ = header$
-    .pipe(
-      map(({ height }) => height),
-      distinctUntilChanged()
-    )
+  const adjust$ = header$.pipe(
+    map(({ height }) => height),
+    distinctUntilChanged(),
+  );
 
   // Compute the main area's top and bottom borders
-  const border$ = adjust$
-    .pipe(
-      switchMap(() => watchElementSize(el)
-        .pipe(
-          map(({ height }) => ({
-            top:    el.offsetTop,
-            bottom: el.offsetTop + height
-          })),
-          distinctUntilKeyChanged("bottom")
-        )
-      )
-    )
+  const border$ = adjust$.pipe(
+    switchMap(() =>
+      watchElementSize(el).pipe(
+        map(({ height }) => ({
+          top: el.offsetTop,
+          bottom: el.offsetTop + height,
+        })),
+        distinctUntilKeyChanged("bottom"),
+      ),
+    ),
+  );
 
   // Compute the main area's offset, visible height and if we scrolled past
-  return combineLatest([adjust$, border$, viewport$])
-    .pipe(
-      map(([header, { top, bottom }, { offset: { y }, size: { height } }]) => {
-        height = Math.max(0, height
-          - Math.max(0, top    - y,  header)
-          - Math.max(0, height + y - bottom)
-        )
+  return combineLatest([adjust$, border$, viewport$]).pipe(
+    map(
+      ([
+        header,
+        { top, bottom },
+        {
+          offset: { y },
+          size: { height },
+        },
+      ]) => {
+        height = Math.max(
+          0,
+          height -
+            Math.max(0, top - y, header) -
+            Math.max(0, height + y - bottom),
+        );
         return {
           offset: top - header,
           height,
-          active: top - header <= y
-        }
-      }),
-      distinctUntilChanged((a, b) => (
-        a.offset === b.offset &&
-        a.height === b.height &&
-        a.active === b.active
-      ))
-    )
+          active: top - header <= y,
+        };
+      },
+    ),
+    distinctUntilChanged(
+      (a, b) =>
+        a.offset === b.offset && a.height === b.height && a.active === b.active,
+    ),
+  );
 }

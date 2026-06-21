@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -31,18 +31,18 @@ import {
   distinctUntilKeyChanged,
   finalize,
   map,
-  tap
-} from "rxjs"
+  tap,
+} from "rxjs";
 
 import {
   Viewport,
   getElementSize,
   getOptionalElement,
-  watchViewportAt
-} from "~/browser"
+  watchViewportAt,
+} from "~/browser";
 
-import { Component } from "../../_"
-import { Header } from "../_"
+import { Component } from "../../_";
+import { Header } from "../_";
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -52,7 +52,7 @@ import { Header } from "../_"
  * Header
  */
 export interface HeaderTitle {
-  active: boolean                      // Header title is active
+  active: boolean; // Header title is active
 }
 
 /* ----------------------------------------------------------------------------
@@ -63,16 +63,16 @@ export interface HeaderTitle {
  * Watch options
  */
 interface WatchOptions {
-  viewport$: Observable<Viewport>      // Viewport observable
-  header$: Observable<Header>          // Header observable
+  viewport$: Observable<Viewport>; // Viewport observable
+  header$: Observable<Header>; // Header observable
 }
 
 /**
  * Mount options
  */
 interface MountOptions {
-  viewport$: Observable<Viewport>      // Viewport observable
-  header$: Observable<Header>          // Header observable
+  viewport$: Observable<Viewport>; // Viewport observable
+  header$: Observable<Header>; // Header observable
 }
 
 /* ----------------------------------------------------------------------------
@@ -88,18 +88,18 @@ interface MountOptions {
  * @returns Header title observable
  */
 export function watchHeaderTitle(
-  el: HTMLElement, { viewport$, header$ }: WatchOptions
+  el: HTMLElement,
+  { viewport$, header$ }: WatchOptions,
 ): Observable<HeaderTitle> {
-  return watchViewportAt(el, { viewport$, header$ })
-    .pipe(
-      map(({ offset: { y } }) => {
-        const { height } = getElementSize(el)
-        return {
-          active: height > 0 && y >= height
-        }
-      }),
-      distinctUntilKeyChanged("active")
-    )
+  return watchViewportAt(el, { viewport$, header$ }).pipe(
+    map(({ offset: { y } }) => {
+      const { height } = getElementSize(el);
+      return {
+        active: height > 0 && y >= height,
+      };
+    }),
+    distinctUntilKeyChanged("active"),
+  );
 }
 
 /**
@@ -114,34 +114,32 @@ export function watchHeaderTitle(
  * @returns Header title component observable
  */
 export function mountHeaderTitle(
-  el: HTMLElement, options: MountOptions
+  el: HTMLElement,
+  options: MountOptions,
 ): Observable<Component<HeaderTitle>> {
   return defer(() => {
-    const push$ = new Subject<HeaderTitle>()
+    const push$ = new Subject<HeaderTitle>();
     push$.subscribe({
-
       // Handle emission
       next({ active }) {
-        el.classList.toggle("md-header__title--active", active)
+        el.classList.toggle("md-header__title--active", active);
       },
 
       // Handle complete
       complete() {
-        el.classList.remove("md-header__title--active")
-      }
-    })
+        el.classList.remove("md-header__title--active");
+      },
+    });
 
     // Obtain headline, if any
-    const heading = getOptionalElement(".md-content h1")
-    if (typeof heading === "undefined")
-      return EMPTY
+    const heading = getOptionalElement(".md-content h1");
+    if (typeof heading === "undefined") return EMPTY;
 
     // Create and return component
-    return watchHeaderTitle(heading, options)
-      .pipe(
-        tap(state => push$.next(state)),
-        finalize(() => push$.complete()),
-        map(state => ({ ref: el, ...state }))
-      )
-  })
+    return watchHeaderTitle(heading, options).pipe(
+      tap((state) => push$.next(state)),
+      finalize(() => push$.complete()),
+      map((state) => ({ ref: el, ...state })),
+    );
+  });
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Zensical and contributors
+ * Copyright (c) 2025-2026 Zensical and contributors
  *
  * SPDX-License-Identifier: MIT
  * Third-party contributions licensed under DCO
@@ -23,7 +23,7 @@
  * IN THE SOFTWARE.
  */
 
-import "focus-visible"
+import "focus-visible";
 
 import {
   EMPTY,
@@ -38,10 +38,10 @@ import {
   merge,
   mergeWith,
   shareReplay,
-  switchMap
-} from "rxjs"
+  switchMap,
+} from "rxjs";
 
-import { configuration, feature } from "./_"
+import { configuration, feature } from "./_";
 import {
   at,
   getActiveElement,
@@ -56,8 +56,8 @@ import {
   watchMedia,
   watchPrint,
   watchScript,
-  watchViewport
-} from "./browser"
+  watchViewport,
+} from "./browser";
 import {
   getComponentElement,
   getComponentElements,
@@ -78,21 +78,17 @@ import {
   mountTabs,
   SearchIndex,
   watchHeader,
-  watchMain
-} from "./components"
+  watchMain,
+} from "./components";
 import {
   fetchSitemap,
   setupAlternate,
   setupClipboardJS,
   setupInstantNavigation,
-  setupVersionSelector
-} from "./integrations"
-import {
-  patchEllipsis,
-  patchIndeterminate,
-  patchScrollfix
-} from "./patches"
-import "./polyfills"
+  setupVersionSelector,
+} from "./integrations";
+import { patchEllipsis, patchIndeterminate, patchScrollfix } from "./patches";
+import "./polyfills";
 
 /* ----------------------------------------------------------------------------
  * Functions - @todo refactor
@@ -105,19 +101,14 @@ import "./polyfills"
  */
 function fetchSearchIndex(): Observable<SearchIndex> {
   if (location.protocol === "file:") {
-    return watchScript(
-      `${new URL("search.js", config.base)}`
-    )
-      .pipe(
-        // @ts-ignore - @todo fix typings
-        map(() => __index),
-        catchError(() => NEVER),
-        shareReplay(1)
-      )
+    return watchScript(`${new URL("search.js", config.base)}`).pipe(
+      // @ts-ignore - @todo fix typings
+      map(() => __index),
+      catchError(() => NEVER),
+      shareReplay(1),
+    );
   } else {
-    return requestJSON<SearchIndex>(
-      new URL("search.json", config.base)
-    )
+    return requestJSON<SearchIndex>(new URL("search.json", config.base));
   }
 }
 
@@ -126,211 +117,205 @@ function fetchSearchIndex(): Observable<SearchIndex> {
  * ------------------------------------------------------------------------- */
 
 // Yay, JavaScript is available
-document.documentElement.classList.remove("no-js")
-document.documentElement.classList.add("js")
+document.documentElement.classList.remove("no-js");
+document.documentElement.classList.add("js");
 
 // Set up navigation observables and subjects
-const document$ = watchDocument()
-const location$ = watchLocation()
-const target$   = watchLocationTarget(location$)
-const keyboard$ = watchKeyboard()
+const document$ = watchDocument();
+const location$ = watchLocation();
+const target$ = watchLocationTarget(location$);
+const keyboard$ = watchKeyboard();
 
 // Set up media observables
-const viewport$ = watchViewport()
-const tablet$   = watchMedia("(min-width: 60em)")
-const screen$   = watchMedia("(min-width: 76.25em)")
-const print$    = watchPrint()
+const viewport$ = watchViewport();
+const tablet$ = watchMedia("(min-width: 60em)");
+const screen$ = watchMedia("(min-width: 76.25em)");
+const print$ = watchPrint();
 
 // Retrieve search index, if search is enabled
-const config = configuration()
-const index$ = getOptionalElement(".md-search")
-  ? fetchSearchIndex()
-  : NEVER
+const config = configuration();
+const index$ = getOptionalElement(".md-search") ? fetchSearchIndex() : NEVER;
 
 // Set up Clipboard.js integration
-const alert$ = new Subject<string>()
-setupClipboardJS({ alert$ })
+const alert$ = new Subject<string>();
+setupClipboardJS({ alert$ });
 
 // Set up language selector
-setupAlternate({ document$ })
+setupAlternate({ document$ });
 
 // Set up progress indicator
-const progress$ = new Subject<number>()
+const progress$ = new Subject<number>();
 
 // Set up sitemap for instant navigation and previews
-const sitemap$ = fetchSitemap(config.base)
+const sitemap$ = fetchSitemap(config.base);
 
 // Set up instant navigation, if enabled
 if (feature("navigation.instant"))
-  setupInstantNavigation({ sitemap$, location$, viewport$, progress$ })
-    .subscribe(document$)
+  setupInstantNavigation({
+    sitemap$,
+    location$,
+    viewport$,
+    progress$,
+  }).subscribe(document$);
 
 // Set up version selector
-if (config.version?.provider === "mike")
-  setupVersionSelector({ document$ })
+if (config.version?.provider === "mike") setupVersionSelector({ document$ });
 
 // Always close drawer and search on navigation
 merge(location$, target$)
-  .pipe(
-    delay(125)
-  )
-    .subscribe(() => {
-      setToggle("drawer", false)
-      setToggle("search", false)
-    })
+  .pipe(delay(125))
+  .subscribe(() => {
+    setToggle("drawer", false);
+    setToggle("search", false);
+  });
 
 // Set up global keyboard handlers
 keyboard$
-  .pipe(
-    filter(({ mode, meta }) => mode === "global" && !meta)
-  )
-    .subscribe(key => {
-      switch (key.type) {
+  .pipe(filter(({ mode, meta }) => mode === "global" && !meta))
+  .subscribe((key) => {
+    switch (key.type) {
+      // Go to previous page
+      case ",":
+      case "p":
+        const prev = document.querySelector("link[rel=prev]");
+        if (prev instanceof HTMLLinkElement) setLocation(prev);
+        break;
 
-        // Go to previous page
-        case ",":
-        case "p":
-          const prev = document.querySelector("link[rel=prev]")
-          if (prev instanceof HTMLLinkElement)
-            setLocation(prev)
-          break
+      // Go to next page
+      case ".":
+      case "n":
+        const next = document.querySelector("link[rel=next]");
+        if (next instanceof HTMLLinkElement) setLocation(next);
+        break;
 
-        // Go to next page
-        case ".":
-        case "n":
-          const next = document.querySelector("link[rel=next]")
-          if (next instanceof HTMLLinkElement)
-            setLocation(next)
-          break
+      // Open search
+      case "/":
+        const el = document.querySelector("[data-md-component=search] button");
+        if (el instanceof HTMLButtonElement) el.click();
+        break;
 
-        // Open search
-        case "/":
-          const el = document.querySelector("[data-md-component=search] button")
-          if (el instanceof HTMLButtonElement)
-            el.click()
-          break
-
-        // Expand navigation, see https://bit.ly/3ZjG5io
-        case "Enter":
-          const active = getActiveElement()
-          if (active instanceof HTMLLabelElement)
-            active.click()
-      }
-    })
+      // Expand navigation, see https://bit.ly/3ZjG5io
+      case "Enter":
+        const active = getActiveElement();
+        if (active instanceof HTMLLabelElement) active.click();
+    }
+  });
 
 // Set up patches
-patchEllipsis({ viewport$, document$ })
-patchIndeterminate({ document$, tablet$ })
-patchScrollfix({ document$ })
+patchEllipsis({ viewport$, document$ });
+patchIndeterminate({ document$, tablet$ });
+patchScrollfix({ document$ });
 
 // Set up header and main area observable
-const header$ = watchHeader(getComponentElement("header"), { viewport$ })
-const main$ = document$
-  .pipe(
-    map(() => getComponentElement("main")),
-    switchMap(el => watchMain(el, { viewport$, header$ })),
-    shareReplay(1)
-  )
+const header$ = watchHeader(getComponentElement("header"), { viewport$ });
+const main$ = document$.pipe(
+  map(() => getComponentElement("main")),
+  switchMap((el) => watchMain(el, { viewport$, header$ })),
+  shareReplay(1),
+);
 
 // Set up control component observables
 const control$ = merge(
-
   // Consent
-  ...getComponentElements("consent")
-    .map(el => mountConsent(el, { target$ })),
+  ...getComponentElements("consent").map((el) => mountConsent(el, { target$ })),
 
   // Dialog
-  ...getComponentElements("dialog")
-    .map(el => mountDialog(el, { alert$ })),
+  ...getComponentElements("dialog").map((el) => mountDialog(el, { alert$ })),
 
   // Color palette
-  ...getComponentElements("palette")
-    .map(el => mountPalette(el)),
+  ...getComponentElements("palette").map((el) => mountPalette(el)),
 
   // Progress bar
-  ...getComponentElements("progress")
-    .map(el => mountProgress(el, { progress$ })),
+  ...getComponentElements("progress").map((el) =>
+    mountProgress(el, { progress$ }),
+  ),
 
   // Search
-  ...getComponentElements("search")
-    .map(el => mountSearch(el, { index$ })),
+  ...getComponentElements("search").map((el) => mountSearch(el, { index$ })),
 
   // Repository information
-  ...getComponentElements("source")
-    .map(el => mountSource(el))
-)
+  ...getComponentElements("source").map((el) => mountSource(el)),
+);
 
 // Set up content component observables
-const content$ = defer(() => merge(
+const content$ = defer(() =>
+  merge(
+    // Announcement bar
+    ...getComponentElements("announce").map((el) => mountAnnounce(el)),
 
-  // Announcement bar
-  ...getComponentElements("announce")
-    .map(el => mountAnnounce(el)),
-
-  // Content
-  ...getComponentElements("content")
-    .map(el => mountContent(el, { sitemap$, viewport$, target$, print$ })),
-
-  // Search highlighting
-  ...getComponentElements("content")
-    .map(el => feature("search.highlight")
-      ? mountSearchHighlight(el, { index$, location$ })
-      : EMPTY
+    // Content
+    ...getComponentElements("content").map((el) =>
+      mountContent(el, { sitemap$, viewport$, target$, print$ }),
     ),
 
-  // Header
-  ...getComponentElements("header")
-    .map(el => mountHeader(el, { viewport$, header$, main$ })),
-
-  // Header title
-  ...getComponentElements("header-title")
-    .map(el => mountHeaderTitle(el, { viewport$, header$ })),
-
-  // Sidebar
-  ...getComponentElements("sidebar")
-    .map(el => el.getAttribute("data-md-type") === "navigation"
-      ? at(screen$, () => mountSidebar(el, { viewport$, header$, main$ }))
-      : at(tablet$, () => mountSidebar(el, { viewport$, header$, main$ }))
+    // Search highlighting
+    ...getComponentElements("content").map((el) =>
+      feature("search.highlight")
+        ? mountSearchHighlight(el, { index$, location$ })
+        : EMPTY,
     ),
 
-  // Navigation tabs
-  ...getComponentElements("tabs")
-    .map(el => mountTabs(el, { viewport$, header$ })),
+    // Header
+    ...getComponentElements("header").map((el) =>
+      mountHeader(el, { viewport$, header$, main$ }),
+    ),
 
-  // Table of contents
-  ...getComponentElements("toc")
-    .map(el => mountTableOfContents(el, {
-      viewport$, header$, main$, target$
-    })),
+    // Header title
+    ...getComponentElements("header-title").map((el) =>
+      mountHeaderTitle(el, { viewport$, header$ }),
+    ),
 
-  // Back-to-top button
-  ...getComponentElements("top")
-    .map(el => mountBackToTop(el, { viewport$, header$, main$, target$ }))
-))
+    // Sidebar
+    ...getComponentElements("sidebar").map((el) =>
+      el.getAttribute("data-md-type") === "navigation"
+        ? at(screen$, () => mountSidebar(el, { viewport$, header$, main$ }))
+        : at(tablet$, () => mountSidebar(el, { viewport$, header$, main$ })),
+    ),
+
+    // Navigation tabs
+    ...getComponentElements("tabs").map((el) =>
+      mountTabs(el, { viewport$, header$ }),
+    ),
+
+    // Table of contents
+    ...getComponentElements("toc").map((el) =>
+      mountTableOfContents(el, {
+        viewport$,
+        header$,
+        main$,
+        target$,
+      }),
+    ),
+
+    // Back-to-top button
+    ...getComponentElements("top").map((el) =>
+      mountBackToTop(el, { viewport$, header$, main$, target$ }),
+    ),
+  ),
+);
 
 // Set up component observables
-const component$ = document$
-  .pipe(
-    switchMap(() => content$),
-    mergeWith(control$),
-    shareReplay(1)
-  )
+const component$ = document$.pipe(
+  switchMap(() => content$),
+  mergeWith(control$),
+  shareReplay(1),
+);
 
 // Subscribe to all components
-component$.subscribe()
+component$.subscribe();
 
 /* ----------------------------------------------------------------------------
  * Exports
  * ------------------------------------------------------------------------- */
 
-window.document$  = document$          // Document observable
-window.location$  = location$          // Location subject
-window.target$    = target$            // Location target observable
-window.keyboard$  = keyboard$          // Keyboard observable
-window.viewport$  = viewport$          // Viewport observable
-window.tablet$    = tablet$            // Media tablet observable
-window.screen$    = screen$            // Media screen observable
-window.print$     = print$             // Media print observable
-window.alert$     = alert$             // Alert subject
-window.progress$  = progress$          // Progress indicator subject
-window.component$ = component$         // Component observable
+window.document$ = document$; // Document observable
+window.location$ = location$; // Location subject
+window.target$ = target$; // Location target observable
+window.keyboard$ = keyboard$; // Keyboard observable
+window.viewport$ = viewport$; // Viewport observable
+window.tablet$ = tablet$; // Media tablet observable
+window.screen$ = screen$; // Media screen observable
+window.print$ = print$; // Media print observable
+window.alert$ = alert$; // Alert subject
+window.progress$ = progress$; // Progress indicator subject
+window.component$ = component$; // Component observable
