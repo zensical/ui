@@ -151,7 +151,7 @@ export function setupSearchHighlighter(
       query
         .split(separator)
         .map(term => term.replace(/[|\\{}()[\]^$+*?.-]/g, "\\$&"))
-        .filter(term => term.length > 0)
+        .filter(term => term.length >= 2)
         .join("|")
     })`, "img")
 
