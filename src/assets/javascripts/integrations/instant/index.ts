@@ -37,12 +37,15 @@ import {
   distinctUntilKeyChanged,
   endWith,
   exhaustMap,
+  filter,
   fromEvent,
   ignoreElements,
   map,
   merge,
   of,
+  pairwise,
   share,
+  startWith,
   switchMap,
   take,
   tap,
@@ -339,7 +342,10 @@ export function setupInstantNavigation(
   // reason, we fall back and use regular navigation, forcing a reload.
   const document$ =
     location$.pipe(
-      distinctUntilKeyChanged("pathname"),
+      startWith(getLocation()),
+      pairwise(),
+      filter(([prev, next]) => prev.pathname !== next.pathname),
+      map(([, url]) => url),
       switchMap(url => requestHTML(url, { progress$ })
         .pipe(
           catchError(() => {
@@ -374,6 +380,18 @@ export function setupInstantNavigation(
     document$.pipe(
       switchMap(() => location$),
       distinctUntilKeyChanged("hash"),
+    ),
+
+    // Handle hash changes on the current document, including the first anchor
+    // click after the initial page load.
+    location$.pipe(
+      startWith(getLocation()),
+      pairwise(),
+      filter(([prev, next]) => (
+        prev.pathname === next.pathname &&
+        prev.hash     !== next.hash
+      )),
+      map(([, url]) => url)
     ),
 
     // Handle instant navigation events that are triggered by the user clicking
