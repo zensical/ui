@@ -110,6 +110,40 @@
     border-bottom: var(--md-tooltip-tail) solid var(--md-default-bg-color);
   }
 
+  // Hover bridge for interactive tooltips to span the visual gap to the host
+  &[role="dialog"]::after {
+    position: absolute;
+    left:
+      clamp(
+        #{px2rem(16px)},
+        calc(
+          var(--md-tooltip-host-x) -
+          #{px2rem(16px)}
+        ),
+        calc(
+          100vw -
+          var(--md-tooltip-width) -
+          #{px2rem(16px)}
+        )
+      );
+    z-index: 1;
+    display: block;
+    width: var(--md-tooltip-width);
+    height: px2rem(16px);
+    content: "";
+    pointer-events: auto;
+  }
+
+  // Hover bridge if rendered above target
+  &[role="dialog"].md-tooltip2--top::after {
+    top: 100%;
+  }
+
+  // Hover bridge if rendered below target
+  &[role="dialog"].md-tooltip2--bottom::after {
+    bottom: 100%;
+  }
+
   // Tooltip is visible
   &--active {
     z-index: 4;

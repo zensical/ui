@@ -47,9 +47,9 @@
     {% endblock %}
     {% block styles %}
       {% if config.theme.variant == "modern" %}
-        {% set href = 'assets/stylesheets/modern/main.fba56155.min.css' | url %}
+        {% set href = 'assets/stylesheets/modern/main.19d3147f.min.css' | url %}
       {% else %}
-        {% set href = 'assets/stylesheets/classic/main.a2001754.min.css' | url %}
+        {% set href = 'assets/stylesheets/classic/main.82a87433.min.css' | url %}
       {% endif %}
       <link rel="stylesheet" href="{{ href }}">
       {% if config.theme.palette %}
@@ -265,7 +265,7 @@
             "search.result.term.missing": lang.t("search.result.term.missing"),
             "select.version": lang.t("select.version")
           },
-          "search": "assets/javascripts/workers/search.e2d2d235.min.js" | url,
+          "search": "assets/javascripts/workers/search.b6b7e04f.min.js" | url,
           "annotate": _.annotate or none,
           "tags": _.tags or none,
           "version": _.version or none
@@ -273,7 +273,7 @@
       </script>
     {% endblock %}
     {% block scripts %}
-      <script src="{{ 'assets/javascripts/bundle.42a60823.min.js' | url }}"></script>
+      <script src="{{ 'assets/javascripts/bundle.ee611ef6.min.js' | url }}"></script>
       {% for script in config.extra_javascript %}
         {{ script | script_tag }}
       {% endfor %}
