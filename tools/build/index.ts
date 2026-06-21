@@ -83,12 +83,11 @@ function minsvg(data: string): string {
   const result = optimize(data, {
     plugins: [
       {
-        name: "preset-default",
-        params: {
-          overrides: {
-            removeViewBox: false
-          }
-        }
+        name: "preset-default"
+      },
+      {
+        name: "removeViewBox",
+        active: false
       },
       {
         name: "removeDimensions"

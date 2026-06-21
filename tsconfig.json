@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
-    "baseUrl": "src",
     "esModuleInterop": true,
     "jsx": "react",
     "jsxFactory": "h",
@@ -11,7 +10,6 @@
       "webworker"
     ],
     "module": "commonjs",
-    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -19,9 +17,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "~/*": ["./assets/javascripts/*"],
+      "~/*": ["./src/assets/javascripts/*"],
     },
     "removeComments": false,
+    "rootDir": ".",
     "sourceMap": true,
     "skipLibCheck": true,
     "strictBindCallApply": true,
