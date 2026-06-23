@@ -3,7 +3,7 @@
   {%- for page in pages -%}
     {%- if page.canonical_url %}
       <url>
-        <loc>{{ page.canonical_url }}</loc>
+        <loc>{{ page.canonical_url | escape }}</loc>
       </url>
     {%- endif -%}
   {%- endfor %}
