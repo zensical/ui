@@ -289,8 +289,12 @@
     font-size: px2em(13.6px);
     user-select: none;
     background-color: var(--md-code-bg-color);
-    border-top-left-radius: px2rem(8px);
     border-bottom-left-radius: px2rem(8px);
+  }
+
+  // Add rounded border if no title is present
+  tr:first-child > .linenos {
+    border-top-left-radius: px2rem(8px);
   }
 
   // Code block line numbers container
@@ -307,14 +311,6 @@
     span[class] {
       padding-right: px2em(8px, 13.6px);
     }
-
-    // .active {
-    //   display: inline-block;
-    //   background-color: var(--md-code-hl-color--light);
-    //   margin-left: -1.1764705882em; // @todo source correct values
-    //   padding-left: 1.1764705882em;
-    //   font-weight: bold;
-    // }
   }
 
   // Code block container - stretch to remaining space
@@ -344,6 +340,11 @@
     > tbody > tr > .code > div > pre > code {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
+    }
+
+    // Remove rounded border if title is present
+    > tbody > tr:nth-child(2) > .code > div > pre > code {
+      border-top-right-radius: 0;
     }
   }
 

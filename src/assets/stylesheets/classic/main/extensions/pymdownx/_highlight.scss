@@ -29,14 +29,14 @@
 
 // Code block
 .highlight {
-
   // .o  = Operator
   // .ow = Operator, word
   :is(.o, .ow) {
     color: var(--md-code-hl-operator-color);
   }
 
-  .p {  // Punctuation
+  .p {
+    // Punctuation
     color: var(--md-code-hl-punctuation-color);
   }
 
@@ -151,11 +151,13 @@
     border-radius: px2rem(2px);
   }
 
-  .gd { // Diff, delete
+  .gd {
+    // Diff, delete
     background-color: var(--md-typeset-del-color);
   }
 
-  .gi { // Diff, insert
+  .gi {
+    // Diff, insert
     background-color: var(--md-typeset-ins-color);
   }
 
@@ -287,8 +289,13 @@
     font-size: px2em(13.6px);
     user-select: none;
     background-color: var(--md-code-bg-color);
-    border-top-left-radius: px2rem(2px);
     border-bottom-left-radius: px2rem(2px);
+  }
+
+  // Only apply the top left border radius to the first line number - if it's
+  // not the first row, a title was set which is already rounded
+  tr:first-child > .linenos {
+    border-top-left-radius: px2rem(2px);
   }
 
   // Code block line numbers container
@@ -305,14 +312,6 @@
     span[class] {
       padding-right: px2em(8px, 13.6px);
     }
-
-    // .active {
-    //   display: inline-block;
-    //   background-color: var(--md-code-hl-color--light);
-    //   margin-left: -1.1764705882em; // @todo source correct values
-    //   padding-left: 1.1764705882em;
-    //   font-weight: bold;
-    // }
   }
 
   // Code block container - stretch to remaining space
@@ -331,7 +330,6 @@
 
 // Scoped in typesetted content to match specificity of regular content
 .md-typeset {
-
   // Code block with line numbers - unfortunately, these selectors need to be
   // overly specific so they don't bleed into code blocks in annotations.
   .highlighttable {
@@ -342,6 +340,11 @@
     > tbody > tr > .code > div > pre > code {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
+    }
+
+    // Remove rounded border if title is present
+    > tbody > tr:nth-child(2) > .code > div > pre > code {
+      border-top-right-radius: 0;
     }
   }
 
@@ -370,7 +373,6 @@
 
 // [mobile -]: Align with body copy
 @include break-to-device(mobile) {
-
   // Top-level code block
   .md-content__inner > .highlight {
     margin: 1em px2rem(-16px);
