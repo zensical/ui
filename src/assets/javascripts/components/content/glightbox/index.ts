@@ -27,7 +27,6 @@ import {
   EMPTY,
   Observable,
   catchError,
-  fromEvent,
   map,
   of,
   shareReplay,
@@ -123,17 +122,12 @@ export function mountGLightbox(
     )
 
   // Create and return component
-  return fetchStyles().pipe(switchMap(() => glightbox$))
+  return fetchStyles()
     .pipe(
-      switchMap(gallery => {
-        gallery.setElements(els)
-        return els.map((el, index) => {
-          fromEvent(el, "click").subscribe(ev => {
-            ev.preventDefault()
-            gallery.openAt(index)
-          })
-          return { ref: el }
-        })
+      switchMap(() => glightbox$),
+      switchMap(glightbox => {
+        glightbox.reload()
+        return els.map(el => ({ ref: el }))
       })
     )
 }
