@@ -218,8 +218,8 @@ kbd {
 
   // Inline code block
   code {
-    padding: 0.25em 0.4em;
-    font-size: px2em(13.6px);
+    padding: 0.2em 0.4em;
+    font-size: px2em(12.8px, 15px);
     word-break: break-word;
     background-color: var(--md-code-bg-color);
     border-radius: px2rem(4px);
@@ -239,12 +239,12 @@ kbd {
   pre {
     position: relative;
     display: flow-root;
-    line-height: 1.4;
+    line-height: 1.5;
 
     // Code block
     > code {
       display: block;
-      padding: px2em(10.5px, 13.6px) px2em(16px, 13.6px);
+      padding: px2em(10.5px, 12.8px) px2em(16px, 12.8px);
       margin: 0;
       overflow: auto;
       word-break: normal;
