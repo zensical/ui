@@ -39,7 +39,7 @@
 
 /* General marker */
 marker {
-  fill: var(--md-mermaid-edge-color) !important;
+  fill: var(--md-mermaid-edge-color);
 }
 
 /* General edge label */
@@ -174,14 +174,14 @@ g.classGroup text {
 
 /* Class extension, composition and dependency marker */
 defs marker.marker.extension.class path,
-defs marker.marker.composition.class path ,
-defs marker.marker.dependency.class path  {
+defs marker.marker.composition.class path,
+defs marker.marker.dependency.class path {
   fill: var(--md-mermaid-edge-color) !important;
   stroke: var(--md-mermaid-edge-color) !important;
 }
 
 /* Class aggregation marker */
-defs marker.marker.aggregation.class path  {
+defs marker.marker.aggregation.class path {
   fill: var(--md-mermaid-label-bg-color) !important;
   stroke: var(--md-mermaid-edge-color) !important;
 }
@@ -250,8 +250,8 @@ a .nodeLabel {
 }
 
 /* State fork and join */
-[id^=state-fork] rect,
-[id^=state-join] rect {
+[id^="state-fork"] rect,
+[id^="state-join"] rect {
   fill: var(--md-mermaid-edge-color) !important;
   stroke: none !important;
 }
@@ -274,7 +274,8 @@ a .nodeLabel {
 }
 
 /* State diagram markers */
-defs #statediagram-barbEnd {
+defs [id$="-barbEnd"] {
+  fill: var(--md-mermaid-edge-color);
   stroke: var(--md-mermaid-edge-color);
 }
 
@@ -283,8 +284,8 @@ defs #statediagram-barbEnd {
  * ------------------------------------------------------------------------- */
 
 /* Entity node and path - override color or markers will shine through */
-[id^=entity] rect,
-[id^=entity] path {
+[id^="entity"] rect,
+[id^="entity"] path {
   fill: var(--md-default-bg-color);
 }
 
