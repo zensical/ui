@@ -38,8 +38,9 @@
 }
 
 /* General marker */
-marker {
+.marker {
   fill: var(--md-mermaid-edge-color);
+  stroke: var(--md-mermaid-edge-color);
 }
 
 /* General edge label */
