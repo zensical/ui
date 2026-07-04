@@ -364,7 +364,8 @@ text.actor > tspan {
 
 /* Sequence loop text */
 .loopText,
-.loopText > tspan {
+.loopText > tspan,
+.sectionTitle {
   fill: var(--md-mermaid-sequence-loop-fg-color);
 }
 
