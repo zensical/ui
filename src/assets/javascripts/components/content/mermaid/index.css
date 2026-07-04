@@ -415,6 +415,14 @@ rect.rect + text.text {
 }
 
 /* Sequence diagram markers */
-defs #sequencenumber {
+defs #sequencenumber,
+[id$="-sequencenumber"] {
   fill: var(--md-mermaid-sequence-number-bg-color) !important;
+}
+
+/* Sequence activation */
+[class^="activation"] {
+  fill: var(--md-mermaid-label-bg-color);
+  stroke: var(--md-mermaid-label-fg-color);
+  stroke-width: 1.5px;
 }
