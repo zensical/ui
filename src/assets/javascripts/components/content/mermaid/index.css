@@ -38,8 +38,9 @@
 }
 
 /* General marker */
-marker {
-  fill: var(--md-mermaid-edge-color) !important;
+.marker {
+  fill: var(--md-mermaid-edge-color);
+  stroke: var(--md-mermaid-edge-color);
 }
 
 /* General edge label */
@@ -174,14 +175,14 @@ g.classGroup text {
 
 /* Class extension, composition and dependency marker */
 defs marker.marker.extension.class path,
-defs marker.marker.composition.class path ,
-defs marker.marker.dependency.class path  {
+defs marker.marker.composition.class path,
+defs marker.marker.dependency.class path {
   fill: var(--md-mermaid-edge-color) !important;
   stroke: var(--md-mermaid-edge-color) !important;
 }
 
 /* Class aggregation marker */
-defs marker.marker.aggregation.class path  {
+defs marker.marker.aggregation.class path {
   fill: var(--md-mermaid-label-bg-color) !important;
   stroke: var(--md-mermaid-edge-color) !important;
 }
@@ -250,8 +251,8 @@ a .nodeLabel {
 }
 
 /* State fork and join */
-[id^=state-fork] rect,
-[id^=state-join] rect {
+[id^="state-fork"] rect,
+[id^="state-join"] rect {
   fill: var(--md-mermaid-edge-color) !important;
   stroke: none !important;
 }
@@ -274,7 +275,8 @@ a .nodeLabel {
 }
 
 /* State diagram markers */
-defs #statediagram-barbEnd {
+defs [id$="-barbEnd"] {
+  fill: var(--md-mermaid-edge-color);
   stroke: var(--md-mermaid-edge-color);
 }
 
@@ -283,8 +285,8 @@ defs #statediagram-barbEnd {
  * ------------------------------------------------------------------------- */
 
 /* Entity node and path - override color or markers will shine through */
-[id^=entity] rect,
-[id^=entity] path {
+[id^="entity"] rect,
+[id^="entity"] path {
   fill: var(--md-default-bg-color);
 }
 
@@ -362,7 +364,8 @@ text.actor > tspan {
 
 /* Sequence loop text */
 .loopText,
-.loopText > tspan {
+.loopText > tspan,
+.sectionTitle {
   fill: var(--md-mermaid-sequence-loop-fg-color);
 }
 
@@ -413,6 +416,14 @@ rect.rect + text.text {
 }
 
 /* Sequence diagram markers */
-defs #sequencenumber {
+defs #sequencenumber,
+[id$="-sequencenumber"] {
   fill: var(--md-mermaid-sequence-number-bg-color) !important;
+}
+
+/* Sequence activation */
+[class^="activation"] {
+  fill: var(--md-mermaid-label-bg-color);
+  stroke: var(--md-mermaid-label-fg-color);
+  stroke-width: 1.5px;
 }
