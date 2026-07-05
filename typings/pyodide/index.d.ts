@@ -23,13 +23,19 @@
  * IN THE SOFTWARE.
  */
 
-export * from "./_"
-export * from "./annotation"
-export * from "./code"
-export * from "./details"
-export * from "./exec"
-export * from "./glightbox"
-export * from "./link"
-export * from "./mermaid"
-export * from "./table"
-export * from "./tabs"
+/* ----------------------------------------------------------------------------
+ * Global types
+ * ------------------------------------------------------------------------- */
+
+type AceEditor = any;
+type AceStatic = any;
+
+type PyodideInterface = any;
+
+declare const ace: AceStatic;
+declare const hljs: {
+  highlightElement(el: Element): void;
+};
+declare function loadPyodide(options?: {
+  indexURL?: string;
+}): Promise<any>;
