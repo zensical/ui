@@ -179,6 +179,30 @@ function resolve(document: Document): Observable<Document> {
 }
 
 /**
+ * Check whether a dynamically injected head element must survive navigation
+ *
+ * Ace injects renderer styles into the active document head at runtime. When
+ * instant navigation reconciles head tags, those styles are not present in the
+ * fetched document and would otherwise be removed, breaking editor rendering.
+ *
+ * @param el - Head element
+ *
+ * @returns Whether the element should be preserved
+ */
+function preserve(el: HTMLElement): boolean {
+  if (el.tagName !== "STYLE")
+    return false
+
+  const text = el.textContent ?? ""
+  return (
+    text.includes(".ace_editor") ||
+    text.includes(".ace-zensical") ||
+    text.includes(".ace_scroller") ||
+    text.includes(".ace_gutter")
+  )
+}
+
+/**
  * Inject the contents of a document into the current one
  *
  * @param next - Next document
@@ -221,7 +245,11 @@ function inject(next: Document): Observable<Document> {
     // @todo - find a better way to handle attributes we add dynamically in
     // other components without mounting components on every navigation, as
     // this might impact overall performance - see https://t.ly/ehp_O
-    if (name !== "theme-color" && name !== "color-scheme")
+    if (
+      name !== "theme-color" &&
+      name !== "color-scheme" &&
+      !preserve(el)
+    )
       el.remove()
   }
 

@@ -1,0 +1,169 @@
+////
+/// Copyright (c) 2025 Zensical and contributors
+///
+/// SPDX-License-Identifier: MIT
+/// Third-party contributions licensed under DCO
+///
+/// Permission is hereby granted, free of charge, to any person obtaining a
+/// copy of this software and associated documentation files (the "Software"),
+/// to deal in the Software without restriction, including without limitation
+/// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+/// and/or sell copies of the Software, and to permit persons to whom the
+/// Software is furnished to do so, subject to the following conditions:
+///
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+///
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+/// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+/// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+/// DEALINGS
+////
+
+// ----------------------------------------------------------------------------
+// Rules
+// ----------------------------------------------------------------------------
+
+// Scoped in typesetted content to match specificity of regular content
+.md-typeset {
+  // Container
+  .pyodide {
+    padding: px2em(10.5px, 16px) px2em(16px);
+    border-radius: px2rem(2px);
+    background-color: var(--md-code-bg-color);
+    font-family: var(--md-code-font-family);
+
+    // Editor output spacing
+    > pre {
+      margin: 0;
+    }
+  }
+
+  // Editor
+  .pyodide-editor {
+    width: 100%;
+    margin-block: 1em;
+    font-size: px2em(13.6px, 16px);
+  }
+
+  // Editor bar
+  .pyodide-editor-bar {
+    width: 100%;
+    font: monospace;
+    font-size: 0.75em;
+    color: var(--md-default-fg-color--light);
+    margin-bottom: px2rem(8px);
+    border-bottom: px2rem(1px) solid var(--md-default-fg-color--lightest);
+    padding-bottom: px2rem(8px);
+  }
+
+  // Editor bar item
+  .pyodide-bar-item {
+    display: inline-block;
+    width: 50%;
+  }
+
+  // Clickable editor bar item
+  .pyodide-clickable {
+    cursor: pointer;
+    text-align: right;
+  }
+
+  // Editor output
+  .pyodide-output {
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+
+    // Remove spacing
+    code {
+      padding: 0;
+    }
+  }
+
+  // Editor theme
+  .ace-zensical {
+    background-color: transparent;
+    color: var(--md-code-fg-color);
+
+    // Gutter
+    .ace_gutter {
+      background-color: transparent;
+      color: var(--md-default-fg-color--light);
+    }
+
+    // Gutter cell
+    .ace_gutter-cell {
+      padding-left: 0;
+    }
+
+    // Cursor
+    .ace_cursor {
+      color: var(--md-code-fg-color);
+    }
+
+    // Selection
+    .ace_selection {
+      background: var(--md-code-hl-color--light);
+    }
+
+    // Active line
+    .ace_active-line {
+      background: var(--md-default-fg-color--lightest);
+    }
+
+    // Comment
+    .ace_comment {
+      color: var(--md-code-hl-comment-color);
+    }
+
+    // Literal, string
+    .ace_string {
+      color: var(--md-code-hl-string-color);
+    }
+
+    // Keyword
+    .ace_keyword {
+      color: var(--md-code-hl-keyword-color);
+    }
+
+    // Identifier
+    .ace_identifier {
+      color: var(--md-code-fg-color);
+    }
+
+    // Variable
+    .ace_variable {
+      color: var(--md-code-hl-variable-color);
+    }
+
+    // Function
+    .ace_function {
+      color: var(--md-code-hl-function-color);
+    }
+
+    // Constant
+    :is(.ace_constant, .ace_support) {
+      color: var(--md-code-hl-constant-color);
+    }
+
+    // Number
+    .ace_numeric {
+      color: var(--md-code-hl-number-color);
+    }
+
+    // Operator
+    .ace_operator {
+      color: var(--md-code-hl-operator-color);
+    }
+
+    // Punctuation
+    .ace_punctuation {
+      color: var(--md-code-hl-punctuation-color);
+    }
+  }
+}

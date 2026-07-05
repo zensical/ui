@@ -49,6 +49,10 @@ import {
   mountDetails
 } from "../details"
 import {
+  Pyodide,
+  mountPyodide
+} from "../exec"
+import {
   GLightbox,
   mountGLightbox
 } from "../glightbox"
@@ -85,6 +89,7 @@ export type Content =
   | GLightbox
   | Link
   | Mermaid
+  | Pyodide
   | Tooltip
 
 /* ----------------------------------------------------------------------------
@@ -120,14 +125,20 @@ export function mountContent(
   el: HTMLElement, dependencies: Dependencies
 ): Observable<Component<Content>> {
   const { viewport$, target$, print$ } = dependencies
+
   return merge(
 
     // Annotations
     ...getElements(".annotate:not(.highlight)", el)
       .map(child => mountAnnotationBlock(child, { target$, print$ })),
 
+    // Pyodide blocks
+    ...getElements<HTMLElement>(".pyodide", el)
+      .map(child => mountPyodide(child)),
+
     // Code blocks
     ...getElements("pre:not(.mermaid) > code", el)
+      .filter(child => !child.closest(".pyodide"))
       .map(child => mountCodeBlock(child, { target$, print$ })),
 
     // Links
