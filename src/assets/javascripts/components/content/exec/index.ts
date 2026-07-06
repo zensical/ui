@@ -23,8 +23,6 @@
  * IN THE SOFTWARE.
  */
 
-import escapeHtml from "escape-html";
-
 import {
   Observable,
   catchError,
@@ -200,7 +198,7 @@ function getSession(name: string, pyodide: PyodideInterface): unknown {
  * @param string - Output
  */
 function writeOutput(element: HTMLElement, string: string): void {
-  element.innerHTML = escapeHtml(string);
+  element.textContent = string;
 }
 
 /**
@@ -209,18 +207,7 @@ function writeOutput(element: HTMLElement, string: string): void {
  * @param element - Output element
  */
 function clearOutput(element: HTMLElement): void {
-  element.innerHTML = "";
-}
-
-/**
- * Escape output like the original script
- *
- * @param string - Raw output
- *
- * @returns Escaped output
- */
-function escapeOutput(string: string): string {
-  return new Option(string).innerHTML;
+  element.textContent = "";
 }
 
 /**
@@ -264,7 +251,7 @@ async function evaluatePython(
       writeOutput(output, `${lines.join("\n")}\n`);
     }
   } catch (error) {
-    lines.push(escapeOutput(String(error)));
+    lines.push(String(error));
     writeOutput(output, `${lines.join("\n")}\n`);
   }
 }
