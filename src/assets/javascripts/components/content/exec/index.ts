@@ -59,6 +59,8 @@ interface Elements {
   source: string;
   session: string;
   install: string[];
+  minLines: number;
+  maxLines: number;
 }
 
 /* ----------------------------------------------------------------------------
@@ -135,20 +137,6 @@ function parsePackages(value: string | undefined): string[] {
 }
 
 /**
- * Extract the configured session name from the canonical scaffold
- *
- * @param el - Pyodide root element
- *
- * @returns Session name
- */
-function getSessionName(el: HTMLElement): string {
-  const label = el.querySelector(".pyodide-editor-bar .pyodide-bar-item");
-  const text = label?.textContent ?? "";
-  const match = text.match(/session:\s*([^)]+)\)?/i);
-  return match?.[1]?.trim() || "default";
-}
-
-/**
  * Extract the canonical scaffold elements
  *
  * @param el - Pyodide root element
@@ -173,8 +161,10 @@ function getElements(el: HTMLElement): Elements {
     run,
     clear,
     source: editor.textContent?.trimEnd() ?? "",
-    session: getSessionName(el),
+    session: el.dataset.session ?? "default",
     install: parsePackages(el.dataset.install),
+    minLines: typeof el.dataset.minLines == "undefined" ? 0 : parseInt(el.dataset.minLines),
+    maxLines: typeof el.dataset.maxLines == "undefined" ? Infinity : parseInt(el.dataset.maxLines),
   };
 }
 
@@ -399,8 +389,8 @@ export function mountPyodide(el: HTMLElement): Observable<Component<Pyodide>> {
       editor.setTheme("ace/theme/zensical");
       editor.session.setMode("ace/mode/python");
       editor.setOption("fontFamily", "var(--md-code-font)");
-      editor.setOption("minLines", 0);
-      editor.setOption("maxLines", Infinity);
+      editor.setOption("minLines", elements.minLines);
+      editor.setOption("maxLines", elements.maxLines);
       editor.session.setValue(elements.source);
       editor.gotoLine(1, 0, false);
       editor.clearSelection();
