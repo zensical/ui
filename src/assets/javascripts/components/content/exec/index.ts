@@ -163,8 +163,8 @@ function getElements(el: HTMLElement): Elements {
     source: editor.textContent?.trimEnd() ?? "",
     session: el.dataset.session ?? "default",
     install: parsePackages(el.dataset.install),
-    minLines: typeof el.dataset.minLines == "undefined" ? 0 : parseInt(el.dataset.minLines),
-    maxLines: typeof el.dataset.maxLines == "undefined" ? Infinity : parseInt(el.dataset.maxLines),
+    minLines: typeof el.dataset.minlines == "undefined" ? 0 : parseInt(el.dataset.minlines),
+    maxLines: typeof el.dataset.maxlines == "undefined" ? Infinity : parseInt(el.dataset.maxlines),
   };
 }
 
