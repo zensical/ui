@@ -30,3 +30,13 @@ A few things to keep in mind:
 - **Questions belong in Discord.** The issue tracker is for bug reports, documentation issues, and change requests – not general questions.
 
 [Code of Conduct]: CODE_OF_CONDUCT.md
+
+## Rebuild assets in each PR
+
+Each PR opened in the UI repository must include rebuilt assets. To build assets, run the following command:
+
+``` sh
+npm run build
+```
+
+...then include any changes in your commit.
