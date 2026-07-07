@@ -282,7 +282,7 @@ function initPyodide(): Observable<Promise<PyodideInterface | null>> {
     map(async () => {
       try {
         const pyodide = await loadPyodide({
-          indexURL: "https://unpkg.com/pyodide@314.0.2/",
+          indexURL: "https://cdn.jsdelivr.net/pyodide/v314.0.2/full/",
         });
         await pyodide.loadPackage("micropip");
         return pyodide;
