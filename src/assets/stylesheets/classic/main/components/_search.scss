@@ -60,7 +60,7 @@
     color: var(--md-primary-bg-color);
     background: var(--md-primary-fg-color);
     font-size: px2rem(14px);
-    text-align: left;
+    text-align: start;
     cursor: pointer;
 
     // [tablet landscape +]: Header-embedded search
@@ -81,9 +81,8 @@
     // Search icon
     &::before {
       position: absolute;
-      inset-inline-start: 0;
+      inset-inline-start: px2rem(10px);
       top: px2rem(6px);
-      margin-left: px2rem(10px);
       width: px2rem(20px);
       height: px2rem(20px);
       content: "";
@@ -98,7 +97,7 @@
     &::after {
       position: absolute;
       top: px2rem(7px);
-      right: px2rem(12px);
+      inset-inline-end: px2rem(12px);
       display: block;
       padding: px2rem(2px) px2rem(4px);
       font-size: px2rem(12px);
