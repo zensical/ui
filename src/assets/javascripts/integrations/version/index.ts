@@ -77,11 +77,19 @@ export function setupVersionSelector({ document$ }: SetupOptions): void {
   const current$ = versions$.pipe(
     map((versions) => {
       const [, current] = config.base.match(/([^/]+)\/?$/)!;
+      const fallback = config.version?.default || "latest";
+      const defaults = Array.isArray(fallback) ? fallback : [fallback];
       return (
         versions.find(
           ({ version, aliases }) =>
             version === current || aliases.includes(current),
-        ) || versions[0]
+        ) ||
+        versions.find(
+          ({ version, aliases }) =>
+            defaults.includes(version) ||
+            aliases.some((alias) => defaults.includes(alias)),
+        ) ||
+        versions[0]
       );
     }),
   );
