@@ -112,10 +112,18 @@ export interface Config {
 
 /**
  * Retrieve global configuration and make base URL absolute
+ *
+ * Note that the base URL must be a directory, i.e., end with a trailing
+ * slash, as relative URLs would otherwise resolve against its parent. This
+ * matters on the 404 page, which receives the site URL's path as its base,
+ * e.g., `/team/project`, since it can be served from any location.
  */
 const script = getElement("#__config")
 const config: Config = JSON.parse(script.textContent!)
-config.base = `${new URL(config.base, getLocation())}`
+const base = new URL(config.base, getLocation())
+if (!base.pathname.endsWith("/"))
+  base.pathname += "/"
+config.base = `${base}`
 
 /* ----------------------------------------------------------------------------
  * Functions
