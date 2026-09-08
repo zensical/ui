@@ -79,18 +79,19 @@
 {% endmacro %}
 
 <!-- Render navigation item (pruned) -->
-{% macro render_pruned(nav_item, ref) %}
+{% macro render_pruned(nav_item, ref, content) %}
   {% set ref = ref or nav_item %}
+  {% set content = content or ref %}
   {% set first = nav_item.children | first %}
 
   <!-- Recurse, if the first item has further nested items -->
   {% if first and first.children %}
-    {{ render_pruned(first, ref) }}
+    {{ render_pruned(first, ref, content) }}
 
   <!-- Navigation link -->
   {% else %}
     <a href="{{ first.url | url }}" class="md-nav__link">
-      {{ render_content(ref) }}
+      {{ render_content(content, ref) }}
 
       <!-- Only render toggle if there's at least one nested item -->
       {% if nav_item.children | length > 0 %}
@@ -250,7 +251,7 @@
 
       <!-- Pruned navigation item -->
       {% else %}
-        {{ render_pruned(nav_item, index) }}
+        {{ render_pruned(nav_item, none, index) }}
       {% endif %}
     </li>
 
