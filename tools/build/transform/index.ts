@@ -43,6 +43,9 @@ import { compile } from "sass"
 
 import { base, mkdir, write } from "../_"
 
+const cssnanoPlugin = import("cssnano")
+  .then(({ default: plugin }) => plugin)
+
 /* ----------------------------------------------------------------------------
  * Helper types
  * ------------------------------------------------------------------------- */
@@ -98,7 +101,7 @@ export function transformStyle(
     silenceDeprecations: ["global-builtin", "import"]
   })))
     .pipe(
-      switchMap(({ css }) => postcss([
+      switchMap(async ({ css }) => postcss([
         require("autoprefixer"),
         require("postcss-logical"),
         require("postcss-dir-pseudo-class"),
@@ -110,7 +113,7 @@ export function transformStyle(
           encode: false
         }),
         ...process.argv.includes("--optimize")
-          ? [require("cssnano")]
+          ? [await cssnanoPlugin]
           : []
       ])
         .process(css, {
@@ -164,7 +167,7 @@ export function transformScript(
         setup(build) {
           build.onLoad({ filter: /\.css/ }, async args => {
             const content = await fs.readFile(args.path, "utf8")
-            const { css } = await postcss([require("cssnano")])
+            const { css } = await postcss([await cssnanoPlugin])
               .process(content, {
                 from: undefined
               })
