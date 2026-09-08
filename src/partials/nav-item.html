@@ -82,7 +82,7 @@
 {% macro render_pruned(nav_item, ref, content) %}
   {% set ref = ref or nav_item %}
   {% set content = content or ref %}
-  {% set first = nav_item.children | first %}
+  {% set first = content if content.is_index else nav_item.children | first %}
 
   <!-- Recurse, if the first item has further nested items -->
   {% if first and first.children %}
