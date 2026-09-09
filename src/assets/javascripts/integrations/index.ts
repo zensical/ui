@@ -26,5 +26,6 @@
 export * from "./alternate"
 export * from "./clipboard"
 export * from "./instant"
+export * from "./redirects"
 export * from "./sitemap"
 export * from "./version"

@@ -85,6 +85,7 @@ import {
   setupAlternate,
   setupClipboardJS,
   setupInstantNavigation,
+  setupRedirects,
   setupVersionSelector,
 } from "./integrations";
 import { patchEllipsis, patchIndeterminate, patchScrollfix } from "./patches";
@@ -135,6 +136,9 @@ const print$ = watchPrint();
 // Retrieve search index, if search is enabled
 const config = configuration();
 const index$ = getOptionalElement(".md-search") ? fetchSearchIndex() : NEVER;
+
+// Set up redirects
+setupRedirects({ location$ });
 
 // Set up Clipboard.js integration
 const alert$ = new Subject<string>();

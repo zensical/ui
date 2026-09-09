@@ -101,6 +101,7 @@ export interface Config {
   features: Flag[]                     // Feature flags
   translations: Translations           // Translations
   search: string                       // Search worker URL
+  redirect?: string                    // Redirect manifest URL
   annotate?: Record<string, string[]>  // Annotation mappings
   tags?: Record<string, string>        // Tags mapping
   version?: Versioning                 // Versioning
