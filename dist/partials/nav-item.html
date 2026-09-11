@@ -42,7 +42,7 @@
   {% else %}
     <a href="{{ first.url | url }}" class="md-nav__link">
       {{ render_content(content, ref) }}
-      {% if nav_item.children | length > 0 %}
+      {% if not content.is_index or nav_item.children | length > 1 %}
         <span class="md-nav__icon md-icon"></span>
       {% endif %}
     </a>

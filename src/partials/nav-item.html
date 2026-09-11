@@ -93,8 +93,8 @@
     <a href="{{ first.url | url }}" class="md-nav__link">
       {{ render_content(content, ref) }}
 
-      <!-- Only render toggle if there's at least one nested item -->
-      {% if nav_item.children | length > 0 %}
+      <!-- Only render toggle if there's at least one additional nested item -->
+      {% if not content.is_index or nav_item.children | length > 1 %}
         <span class="md-nav__icon md-icon"></span>
       {% endif %}
     </a>
