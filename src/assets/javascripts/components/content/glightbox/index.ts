@@ -77,8 +77,10 @@ function fetchScripts(): Observable<void> {
  * @returns GLightbox styles observable
  */
 function fetchStyles(): Observable<void> {
-  return watchStyles("https://unpkg.com/glightbox@3/dist/css/glightbox.min.css")
-    .pipe(catchError(() => EMPTY), map(() => undefined))
+  return typeof GLightbox === "undefined" || GLightbox instanceof Element
+    ? watchStyles("https://unpkg.com/glightbox@3/dist/css/glightbox.min.css")
+        .pipe(catchError(() => EMPTY), map(() => undefined))
+    : of(undefined)
 }
 
 /* ----------------------------------------------------------------------------
