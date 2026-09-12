@@ -72,6 +72,10 @@ import {
   ContentTabs,
   mountContentTabs
 } from "../tabs"
+import {
+  ContentTarget,
+  mountContentTarget
+} from "../target"
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -84,6 +88,7 @@ export type Content =
   | Annotation
   | CodeBlock
   | ContentTabs
+  | ContentTarget
   | DataTable
   | Details
   | GLightbox
@@ -124,13 +129,13 @@ interface Dependencies {
 export function mountContent(
   el: HTMLElement, dependencies: Dependencies
 ): Observable<Component<Content>> {
-  const { viewport$, target$, print$ } = dependencies
+  const { sitemap$, viewport$, target$, print$ } = dependencies
 
   return merge(
 
     // Annotations
     ...getElements(".annotate:not(.highlight)", el)
-      .map(child => mountAnnotationBlock(child, { target$, print$ })),
+      .map(child => mountAnnotationBlock(child, { print$ })),
 
     // Pyodide blocks
     ...getElements<HTMLElement>(".pyodide", el)
@@ -143,7 +148,7 @@ export function mountContent(
 
     // Links
     ...getElements("a", el)
-      .map(child => mountLink(child, dependencies)),
+      .map(child => mountLink(child, { sitemap$, viewport$ })),
 
     // Mermaid diagrams
     ...getElements("pre.mermaid", el)
@@ -160,11 +165,14 @@ export function mountContent(
 
     // Details
     ...getElements("details", el)
-      .map(child => mountDetails(child, { target$, print$ })),
+      .map(child => mountDetails(child, { print$ })),
 
     // Content tabs
     ...getElements("[data-tabs]", el)
-      .map(child => mountContentTabs(child, { viewport$, target$ })),
+      .map(child => mountContentTabs(child, { viewport$ })),
+
+    // Content target
+    mountContentTarget(el, { target$ }),
 
     // Tooltips
     ...getElements("[title]:not([data-preview])", el)

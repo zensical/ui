@@ -84,7 +84,6 @@ export interface ContentTabs {
  */
 interface MountOptions {
   viewport$: Observable<Viewport>      // Viewport observable
-  target$: Observable<HTMLElement>     // Location target observable
 }
 
 /* ----------------------------------------------------------------------------
@@ -122,7 +121,7 @@ export function watchContentTabs(
  * @returns Content tabs component observable
  */
 export function mountContentTabs(
-  el: HTMLElement, { viewport$, target$ }: MountOptions
+  el: HTMLElement, { viewport$ }: MountOptions
 ): Observable<Component<ContentTabs>> {
   const container = getElement(".tabbed-labels", el)
   const inputs = getElements<HTMLInputElement>(":scope > input", el)
@@ -203,14 +202,6 @@ export function mountContentTabs(
             behavior: "smooth"
           })
         })
-
-    // Switch to content tab target
-    target$
-      .pipe(
-        takeUntil(done$),
-        filter(input => inputs.includes(input as HTMLInputElement))
-      )
-        .subscribe(input => input.click())
 
     // Add link to each content tab label
     container.classList.add("tabbed-labels--linked")

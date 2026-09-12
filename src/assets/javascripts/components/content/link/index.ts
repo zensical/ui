@@ -70,8 +70,6 @@ export interface Link {}
 interface Dependencies {
   sitemap$: Observable<Sitemap>        // Sitemap observable
   viewport$: Observable<Viewport>      // Viewport observable
-  target$: Observable<HTMLElement>     // Location target observable
-  print$: Observable<boolean>          // Media print observable
 }
 
 /* ----------------------------------------------------------------------------

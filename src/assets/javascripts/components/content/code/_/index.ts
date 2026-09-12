@@ -29,6 +29,7 @@ import {
   Observable,
   Subject,
   asyncScheduler,
+  combineLatest,
   defer,
   distinctUntilChanged,
   distinctUntilKeyChanged,
@@ -210,7 +211,7 @@ export function watchCodeBlock(
  * @returns Code block and annotation component observable
  */
 export function mountCodeBlock(
-  el: HTMLElement, options: MountOptions
+  el: HTMLElement, { target$, print$ }: MountOptions
 ): Observable<Component<CodeBlock>> {
   const { matches: hover } = matchMedia("(hover)")
 
@@ -247,12 +248,35 @@ export function mountCodeBlock(
         container.classList.contains("annotate") ||
         feature("content.code.annotate")
       )) {
-        const annotations$ = mountAnnotationList(list, el, options)
+        const annotations$ = mountAnnotationList(list, el, { print$ })
         content$.push(
-          watchElementSize(container)
+          combineLatest([
+
+            // Mount annotations normally when their code block participates
+            // in layout, and unmount them again when it becomes hidden
+            watchElementSize(container)
+              .pipe(
+                map(({ width, height }) => width && height)
+              ),
+
+            // A target can point into an annotation while its hidden code
+            // block has left the annotation components unmounted. Force
+            // mounting so centralized target handling can render and focus
+            // the annotation before details or content tabs reveal the block.
+            target$
+              .pipe(
+                map(target => (
+                  container.contains(target) || list.contains(target)
+                )),
+                startWith(false),
+                distinctUntilChanged()
+              )
+          ])
             .pipe(
               takeUntil(done$),
-              map(({ width, height }) => width && height),
+
+              // Keep annotations mounted for either lifecycle condition
+              map(([visible, targeted]) => visible || targeted),
               distinctUntilChanged(),
               switchMap(active => active ? annotations$ : EMPTY)
             )

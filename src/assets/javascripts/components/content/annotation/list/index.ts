@@ -58,7 +58,6 @@ import {
  * Mount options
  */
 interface MountOptions {
-  target$: Observable<HTMLElement>     // Location target observable
   print$: Observable<boolean>          // Media print observable
 }
 
@@ -171,7 +170,7 @@ function swap(source: HTMLElement, target: HTMLElement): void {
  * @returns Annotation component observable
  */
 export function mountAnnotationList(
-  el: HTMLElement, container: HTMLElement, { target$, print$ }: MountOptions
+  el: HTMLElement, container: HTMLElement, { print$ }: MountOptions
 ): Observable<Component<Annotation>> {
 
   // Compute prefix for tooltip anchors
@@ -223,9 +222,7 @@ export function mountAnnotationList(
 
     // Create and return component
     return merge(...[...annotations]
-      .map(([, annotation]) => (
-        mountAnnotation(annotation, container, { target$ })
-      ))
+      .map(([, annotation]) => mountAnnotation(annotation, container))
     )
       .pipe(
         finalize(() => push$.complete()),

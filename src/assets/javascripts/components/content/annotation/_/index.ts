@@ -31,7 +31,6 @@ import {
   combineLatest,
   debounceTime,
   defer,
-  delay,
   endWith,
   filter,
   finalize,
@@ -51,6 +50,7 @@ import {
   ElementOffset,
   getActiveElement,
   getElementSize,
+  getElements,
   watchElementContentOffset,
   watchElementFocus,
   watchElementOffset,
@@ -69,17 +69,6 @@ import { Component } from "../../../_"
 export interface Annotation {
   active: boolean                      // Annotation is active
   offset: ElementOffset                // Annotation offset
-}
-
-/* ----------------------------------------------------------------------------
- * Helper types
- * ------------------------------------------------------------------------- */
-
-/**
- * Mount options
- */
-interface MountOptions {
-  target$: Observable<HTMLElement>     // Location target observable
 }
 
 /* ----------------------------------------------------------------------------
@@ -128,14 +117,32 @@ export function watchAnnotation(
  *
  * @param el - Annotation element
  * @param container - Containing element
- * @param options - Options
  *
  * @returns Annotation component observable
  */
 export function mountAnnotation(
-  el: HTMLElement, container: HTMLElement, { target$ }: MountOptions
+  el: HTMLElement, container: HTMLElement
 ): Observable<Component<Annotation>> {
   const [tooltip, index] = Array.from(el.children)
+
+  // Inactive tooltips are detached to prevent their content from introducing
+  // empty lines when copied. Preserve all IDs in their place, since location
+  // targets can only be resolved while an element with the requested ID is in
+  // the document. Descendant IDs are included so any exact anchor inside an
+  // annotation remains addressable, not just the tooltip's own anchor.
+  const targets = tooltip instanceof HTMLElement
+    ? [tooltip, ...getElements<HTMLElement>("[id]", tooltip)]
+        .filter(target => target.id)
+    : []
+
+  // Hidden placeholders participate in target resolution without affecting
+  // layout, rendering, focus order, or copied annotation content.
+  const placeholders = targets.map(target => {
+    const placeholder = document.createElement("span")
+    placeholder.id = target.id
+    placeholder.hidden = true
+    return placeholder
+  })
 
   // Mount component on subscription
   return defer(() => {
@@ -174,15 +181,44 @@ export function mountAnnotation(
 
         // Handle emission
         next({ active }) {
-          if (active)
-            el.prepend(tooltip)
-          else
+          if (active) {
+
+            // Replace one placeholder atomically with the tooltip, ensuring
+            // its IDs remain resolvable throughout the transition. The target
+            // component re-resolves the requested ID after this replacement
+            // so it can reveal and scroll to the real element.
+            const placeholder = placeholders.find(child => child.parentNode)
+            if (placeholder) {
+              placeholder.replaceWith(tooltip)
+              for (const child of placeholders)
+                child.remove()
+
+            // A tooltip without IDs has no placeholders and is restored using
+            // the original behavior when its annotation becomes active.
+            } else if (!tooltip.parentNode) {
+              el.prepend(tooltip)
+            }
+
+          // Keep exact anchors addressable while removing tooltip content from
+          // layout and the document's copied text when the annotation closes.
+          } else if (placeholders.length) {
+            tooltip.replaceWith(...placeholders)
+
+          // Preserve the original detach behavior when there are no IDs.
+          } else {
             tooltip.remove()
+          }
         },
 
         // Handle complete
         complete() {
-          el.prepend(tooltip)
+
+          // Restore the authored DOM when the component is unmounted and
+          // discard every synthetic placeholder it introduced.
+          for (const placeholder of placeholders)
+            placeholder.remove()
+          if (!tooltip.parentNode)
+            el.prepend(tooltip)
         }
       })
 
@@ -254,15 +290,6 @@ export function mountAnnotation(
               getActiveElement()?.blur()
           }
         })
-
-    // Open and focus annotation on location target
-    target$
-      .pipe(
-        takeUntil(done$),
-        filter(target => target === tooltip),
-        delay(125)
-      )
-        .subscribe(() => el.focus())
 
     // Create and return component
     return watchAnnotation(el, container)

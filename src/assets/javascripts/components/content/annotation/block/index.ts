@@ -37,7 +37,6 @@ import { mountAnnotationList } from "../list"
  * Mount options
  */
 interface MountOptions {
-  target$: Observable<HTMLElement>     // Location target observable
   print$: Observable<boolean>          // Media print observable
 }
 
