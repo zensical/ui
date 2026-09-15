@@ -61,9 +61,9 @@
   .task-list-indicator::before {
     position: absolute;
     inset-inline-start: px2em(-24px);
-    top: 0.25em;
-    width: px2em(20px);
-    height: px2em(20px);
+    top: 0.35em;
+    width: 1.15em;
+    height: 1.15em;
     content: "";
     background-color: var(--md-default-fg-color--lighter);
     mask-image: var(--md-tasklist-icon);
