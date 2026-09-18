@@ -227,27 +227,29 @@
           </div>
         {% endif %}
 
-        <!-- Nested navigation -->
-        <nav
-          class="md-nav"
-          data-md-level="{{ level }}"
-          aria-labelledby="{{ path }}_label"
-          aria-expanded="{{ nav_item.active | tojson }}"
-        >
-          <label class="md-nav__title" for="{{ path }}">
-            <span class="md-nav__icon md-icon"></span>
-            {{ render_title(nav_item) }}
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
+        <!-- Only render nested navigation if there are additional pages -->
+        {% if not index or nav_item.children | length > 1 %}
+          <nav
+            class="md-nav"
+            data-md-level="{{ level }}"
+            aria-labelledby="{{ path }}_label"
+            aria-expanded="{{ nav_item.active | tojson }}"
+          >
+            <label class="md-nav__title" for="{{ path }}">
+              <span class="md-nav__icon md-icon"></span>
+              {{ render_title(nav_item) }}
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
 
-            <!-- Nested navigation item -->
-            {% for item in nav_item.children %}
-              {% if not index or item != index %}
-                {{ render(item, path ~ "_" ~ loop.index, level + 1, nav_item) }}
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </nav>
+              <!-- Nested navigation item -->
+              {% for item in nav_item.children %}
+                {% if not index or item != index %}
+                  {{ render(item, path ~ "_" ~ loop.index, level + 1, nav_item) }}
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
 
       <!-- Pruned navigation item -->
       {% else %}

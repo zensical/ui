@@ -118,19 +118,21 @@
             {% endif %}
           </div>
         {% endif %}
-        <nav class="md-nav" data-md-level="{{ level }}" aria-labelledby="{{ path }}_label" aria-expanded="{{ nav_item.active | tojson }}">
-          <label class="md-nav__title" for="{{ path }}">
-            <span class="md-nav__icon md-icon"></span>
-            {{ render_title(nav_item) }}
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            {% for item in nav_item.children %}
-              {% if not index or item != index %}
-                {{ render(item, path ~ "_" ~ loop.index, level + 1, nav_item) }}
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </nav>
+        {% if not index or nav_item.children | length > 1 %}
+          <nav class="md-nav" data-md-level="{{ level }}" aria-labelledby="{{ path }}_label" aria-expanded="{{ nav_item.active | tojson }}">
+            <label class="md-nav__title" for="{{ path }}">
+              <span class="md-nav__icon md-icon"></span>
+              {{ render_title(nav_item) }}
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              {% for item in nav_item.children %}
+                {% if not index or item != index %}
+                  {{ render(item, path ~ "_" ~ loop.index, level + 1, nav_item) }}
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
       {% else %}
         {{ render_pruned(nav_item, none, index) }}
       {% endif %}
