@@ -146,14 +146,19 @@ export function setupSearchHighlighter(
       .replace(/&/g, "&amp;")
       .trim()
 
+    /* Collect search terms */
+    const terms = query
+      .split(separator)
+      .map(term => term.replace(/[|\\{}()[\]^$+*?.-]/g, "\\$&"))
+      .filter(term => term.length >= 2)
+      .join("|")
+
+    /* Skip highlighting if no search terms remain */
+    if (!terms)
+      return value => value
+
     /* Create search term match expression */
-    const match = new RegExp(`(^|${config.separator}|)(${
-      query
-        .split(separator)
-        .map(term => term.replace(/[|\\{}()[\]^$+*?.-]/g, "\\$&"))
-        .filter(term => term.length >= 2)
-        .join("|")
-    })`, "img")
+    const match = new RegExp(`(^|${config.separator}|)(${terms})`, "img")
 
     /* Highlight string value */
     return value => escapeHTML(value)
