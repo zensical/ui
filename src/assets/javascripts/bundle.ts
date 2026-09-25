@@ -195,7 +195,10 @@ keyboard$
       // Open search
       case "/":
         const el = document.querySelector("[data-md-component=search] button");
-        if (el instanceof HTMLButtonElement) el.click();
+        if (el instanceof HTMLButtonElement) {
+          el.click();
+          key.claim();
+        }
         break;
 
       // Expand navigation, see https://bit.ly/3ZjG5io
