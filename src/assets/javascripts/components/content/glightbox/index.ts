@@ -27,6 +27,7 @@ import {
   EMPTY,
   Observable,
   catchError,
+  defer,
   map,
   of,
   shareReplay,
@@ -55,6 +56,11 @@ export interface GLightbox {}
  */
 let glightbox$: Observable<any>
 
+/**
+ * GLightbox styles observable
+ */
+let styles$: Observable<void>
+
 /* ----------------------------------------------------------------------------
  * Helper functions
  * ------------------------------------------------------------------------- */
@@ -73,12 +79,12 @@ function fetchScripts(): Observable<void> {
 
 /**
  * Fetch GLightbox styles
- * 
+ *
  * @returns GLightbox styles observable
  */
 function fetchStyles(): Observable<void> {
   return typeof GLightbox === "undefined" || GLightbox instanceof Element
-    ? watchStyles("https://unpkg.com/glightbox@3/dist/css/glightbox.min.css")
+    ? defer(() => watchStyles("https://unpkg.com/glightbox@3/dist/css/glightbox.min.css"))
         .pipe(catchError(() => EMPTY), map(() => undefined))
     : of(undefined)
 }
@@ -124,7 +130,8 @@ export function mountGLightbox(
     )
 
   // Create and return component
-  return fetchStyles()
+  styles$ ||= fetchStyles()
+  return styles$
     .pipe(
       switchMap(() => glightbox$),
       switchMap(glightbox => {
