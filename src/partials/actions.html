@@ -24,6 +24,19 @@
 -->
 
 <!-- Actions -->
+{% if "content.action.copy" in features and page.markdown_url %}
+  <button
+    type="button"
+    title="{{ lang.t('action.copy') }}"
+    aria-label="{{ lang.t('action.copy') }}"
+    class="md-content__button md-icon"
+    data-md-copy-url="{{ page.markdown_url | url }}"
+  >
+    {% set icon = config.theme.icon.copy or "material/content-copy" %}
+    {% include ".icons/" ~ icon ~ ".svg" %}
+  </button>
+{% endif %}
+
 {% if page.edit_url %}
 
   <!-- Edit button -->

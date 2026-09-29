@@ -71,6 +71,17 @@
   // Button inside of the content area - these buttons are meant for actions on
   // a document-level, i.e. linking to related source code files, printing etc.
   &__button {
+    &[data-md-copy-url] {
+      .no-js & {
+        display: none;
+      }
+
+      &:disabled {
+        cursor: wait;
+        opacity: 0.5;
+      }
+    }
+
     float: inline-end;
     padding: 0;
     margin: px2rem(8px) 0;

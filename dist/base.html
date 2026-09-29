@@ -47,9 +47,9 @@
     {% endblock %}
     {% block styles %}
       {% if config.theme.variant == "modern" %}
-        {% set href = 'assets/stylesheets/modern/main.1502b751.min.css' | url %}
+        {% set href = 'assets/stylesheets/modern/main.2ea95b91.min.css' | url %}
       {% else %}
-        {% set href = 'assets/stylesheets/classic/main.5da0f285.min.css' | url %}
+        {% set href = 'assets/stylesheets/classic/main.22ed7a80.min.css' | url %}
       {% endif %}
       <link rel="stylesheet" href="{{ href }}">
       {% if config.theme.palette %}
@@ -222,7 +222,7 @@
         {% include "partials/footer.html" %}
       {% endblock %}
     </div>
-    <div class="md-dialog" data-md-component="dialog">
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     {% if "navigation.instant.progress" in features %}
@@ -262,6 +262,7 @@
           "translations": {
             "clipboard.copy": lang.t("clipboard.copy"),
             "clipboard.copied": lang.t("clipboard.copied"),
+            "clipboard.error": lang.t("clipboard.error"),
             "search.result.placeholder": lang.t("search.result.placeholder"),
             "search.result.none": lang.t("search.result.none"),
             "search.result.one": lang.t("search.result.one"),
@@ -280,7 +281,7 @@
       </script>
     {% endblock %}
     {% block scripts %}
-      <script src="{{ 'assets/javascripts/bundle.b7d3f789.min.js' | url }}"></script>
+      <script src="{{ 'assets/javascripts/bundle.bfa899f5.min.js' | url }}"></script>
       {% for script in config.extra_javascript %}
         {{ script | script_tag }}
       {% endfor %}

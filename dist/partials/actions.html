@@ -1,6 +1,12 @@
 {#-
   This file was automatically generated - do not edit
 -#}
+{% if "content.action.copy" in features and page.markdown_url %}
+  <button type="button" title="{{ lang.t('action.copy') }}" aria-label="{{ lang.t('action.copy') }}" class="md-content__button md-icon" data-md-copy-url="{{ page.markdown_url | url }}">
+    {% set icon = config.theme.icon.copy or "material/content-copy" %}
+    {% include ".icons/" ~ icon ~ ".svg" %}
+  </button>
+{% endif %}
 {% if page.edit_url %}
   {% if "content.action.edit" in features %}
     <a href="{{ page.edit_url }}" title="{{ lang.t('action.edit') }}" class="md-content__button md-icon" rel="edit">

@@ -34,6 +34,7 @@ import { getElement, getLocation } from "~/browser"
  */
 export type Flag =
   | "announce.dismiss"                 // Dismissable announcement bar
+  | "content.action.copy"              // Page Markdown copy button
   | "content.code.annotate"            // Code annotations
   | "content.code.copy"                // Code copy button
   | "content.code.select"              // Code selection
@@ -67,6 +68,7 @@ export type Flag =
 export type Translation =
   | "clipboard.copy"                   // Copy to clipboard
   | "clipboard.copied"                 // Copied to clipboard
+  | "clipboard.error"                  // Copy failed
   | "search.result.placeholder"        // Type to start searching
   | "search.result.none"               // No matching documents
   | "search.result.one"                // 1 matching document
