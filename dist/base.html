@@ -47,16 +47,16 @@
     {% endblock %}
     {% block styles %}
       {% if config.theme.variant == "modern" %}
-        {% set href = 'assets/stylesheets/modern/main.2ea95b91.min.css' | url %}
+        {% set href = 'assets/stylesheets/modern/main.4ae390e2.min.css' | url %}
       {% else %}
-        {% set href = 'assets/stylesheets/classic/main.22ed7a80.min.css' | url %}
+        {% set href = 'assets/stylesheets/classic/main.cfc7948b.min.css' | url %}
       {% endif %}
       <link rel="stylesheet" href="{{ href }}">
       {% if config.theme.palette %}
         {% if config.theme.variant == "modern" %}
-          {% set href = 'assets/stylesheets/modern/palette.812a03bb.min.css' | url %}
+          {% set href = 'assets/stylesheets/modern/palette.96d1a7e4.min.css' | url %}
         {% else %}
-          {% set href = 'assets/stylesheets/classic/palette.c7ab7c71.min.css' | url %}
+          {% set href = 'assets/stylesheets/classic/palette.bf1c5cd6.min.css' | url %}
         {% endif %}
         <link rel="stylesheet" href="{{ href }}">
       {% endif %}
@@ -281,7 +281,7 @@
       </script>
     {% endblock %}
     {% block scripts %}
-      <script src="{{ 'assets/javascripts/bundle.bfa899f5.min.js' | url }}"></script>
+      <script src="{{ 'assets/javascripts/bundle.67a597eb.min.js' | url }}"></script>
       {% for script in config.extra_javascript %}
         {{ script | script_tag }}
       {% endfor %}
