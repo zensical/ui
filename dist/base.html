@@ -106,16 +106,9 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer" aria-label="{{ lang.t('nav') }}"></label>
     <div data-md-component="skip">
-      {% if page.toc | first is defined %}
-        {% set skip = page.toc | first %}
-        <a href="{{ skip.url | url }}" class="md-skip">
-          {{ lang.t("action.skip") }}
-        </a>
-      {% else %}
-        <a href="#__skip" class="md-skip">
-          {{ lang.t("action.skip") }}
-        </a>
-      {% endif %}
+      <a href="#__skip" class="md-skip">
+        {{ lang.t("action.skip") }}
+      </a>
     </div>
     <div data-md-component="announce">
       {% if self.announce() %}
@@ -206,6 +199,7 @@
                 {% include "partials/path.html" %}
               {% endif %}
               <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
                 {% block content %}
                   {% include "partials/content.html" %}
                 {% endblock %}

@@ -212,16 +212,9 @@
 
     <!-- Skip to content -->
     <div data-md-component="skip">
-      {% if page.toc | first is defined %}
-        {% set skip = page.toc | first %}
-        <a href="{{ skip.url | url }}" class="md-skip">
-          {{ lang.t("action.skip") }}
-        </a>
-      {% else %}
-        <a href="#__skip" class="md-skip">
-          {{ lang.t("action.skip") }}
-        </a>
-      {% endif %}
+      <a href="#__skip" class="md-skip">
+        {{ lang.t("action.skip") }}
+      </a>
     </div>
 
     <!-- Announcement bar -->
@@ -363,6 +356,7 @@
 
               <!-- Page content -->
               <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
                 {% block content %}
                   {% include "partials/content.html" %}
                 {% endblock %}
