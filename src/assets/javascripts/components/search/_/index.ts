@@ -40,7 +40,7 @@ import css from "../client/index.css"
 import { SearchIndex } from "../schema"
 import { configuration } from "~/_"
 import { h } from "~/utilities"
-import { getElement, watchToggle } from "~/browser"
+import { getElement, setLocation, watchToggle } from "~/browser"
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -99,7 +99,8 @@ export function mountSearch(
   // Setup search worker
   try {
     setup(config.search, {
-      highlight: config.features.includes("search.highlight")
+      highlight: config.features.includes("search.highlight"),
+      navigate: (url: string) => setLocation(new URL(url))
     })
     from(index$)
       .subscribe(index => {
