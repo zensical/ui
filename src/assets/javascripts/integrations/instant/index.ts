@@ -99,10 +99,9 @@ function handle(
   if (!(ev.target instanceof Element))
     return EMPTY
 
-  // Skip, as target is not within a link - clicks on non-link elements are
-  // also captured, which we need to exclude from processing
+  // Skip non-link elements and anchors used only as focus targets
   const el = ev.target.closest("a")
-  if (el === null)
+  if (el === null || !el.hasAttribute("href"))
     return EMPTY
 
   // Skip, as link opens in new window - we now know we have captured a click
