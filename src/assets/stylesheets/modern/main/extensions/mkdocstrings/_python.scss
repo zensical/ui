@@ -193,6 +193,10 @@ code.doc-symbol {
   background-color: transparent;
 }
 
+code.doc-symbol-nav {
+  margin-inline-end: 1ch;
+}
+
 code.doc-symbol-parameter,
 a code.doc-symbol-parameter {
   color: var(--doc-symbol-parameter-fg-color);
