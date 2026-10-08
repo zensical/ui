@@ -21,6 +21,12 @@
       {% if page.canonical_url %}
         <link rel="canonical" href="{{ page.canonical_url }}">
       {% endif %}
+      {% if config.plugins.llmstxt and config.plugins.llmstxt.config.enabled %}
+        <link rel="describedby" href="{{ 'llms.txt' | url }}">
+        {% if page.markdown_url %}
+          <link rel="alternate" type="text/markdown" href="{{ page.markdown_url | url }}">
+        {% endif %}
+      {% endif %}
       {% if page.previous_page %}
         <link rel="prev" href="{{ page.previous_page.url | url }}">
       {% endif %}
