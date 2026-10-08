@@ -34,9 +34,10 @@ A few things to keep in mind:
 
 ## Rebuild assets in each PR
 
-Each PR opened in the UI repository must include rebuilt assets. To build assets, run the following command:
+Each PR opened in the UI repository must include rebuilt assets. To build assets, run the following commands:
 
 ``` sh
+npm run upgrade:install
 npm run build
 ```
 
