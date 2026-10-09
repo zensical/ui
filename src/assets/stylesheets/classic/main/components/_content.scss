@@ -115,3 +115,17 @@
     }
   }
 }
+
+// Draft pages are marked with a red pill.
+.md-typeset .zensical-draft-marker {
+  display: table;
+  padding: px2rem(4px) px2rem(12px);
+  margin-bottom: px2rem(16px);
+  font-size: px2rem(12px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background-color: #c62828;
+  border-radius: px2rem(999px);
+}
