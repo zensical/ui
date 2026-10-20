@@ -273,6 +273,16 @@ a .nodeLabel {
   stroke: var(--md-default-fg-color--lighter);
 }
 
+/* State note text */
+.statediagram-note text {
+  fill: var(--md-mermaid-label-fg-color);
+}
+
+/* State note label */
+.statediagram-note .nodeLabel {
+  color: var(--md-mermaid-label-fg-color);
+}
+
 /* State diagram markers */
 defs [id$="-barbEnd"] {
   fill: var(--md-mermaid-edge-color);
