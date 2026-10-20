@@ -147,7 +147,8 @@
     }
 
     // Constant
-    :is(.ace_constant, .ace_support) {
+    .ace_constant,
+    .ace_support {
       color: var(--md-code-hl-constant-color);
     }
 

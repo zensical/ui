@@ -177,7 +177,10 @@
     .md-nav--primary & {
 
       // Navigation link on focus/hover
-      &:is([href], [for]):is(:focus, :hover):not(.md-nav__link--active) {
+      &[href]:focus:not(.md-nav__link--active),
+      &[href]:hover:not(.md-nav__link--active),
+      &[for]:focus:not(.md-nav__link--active),
+      &[for]:hover:not(.md-nav__link--active) {
         color: var(--md-default-fg-color);
         background-color: var(--md-default-fg-color--lightest);
       }
@@ -190,7 +193,10 @@
       overflow-wrap: initial;
 
       // Navigation link on focus/hover
-      &:is([href], [for]):is(:focus, :hover) {
+      &[href]:focus,
+      &[href]:hover,
+      &[for]:focus,
+      &[for]:hover {
         color: var(--md-accent-fg-color);
         background-color: transparent;
       }
@@ -303,7 +309,8 @@
   }
 
   // Show nested navigation when toggle is active or indeterminate
-  &__toggle:is(:checked, .md-toggle--indeterminate) ~ & {
+  &__toggle:checked ~ &,
+  &__toggle.md-toggle--indeterminate ~ & {
     grid-template-rows: minmax(#{px2rem(8px)}, 1fr);
     visibility: visible;
     opacity: 1;
@@ -378,7 +385,8 @@
         height: px2rem(32px);
 
         // Image or icon
-        :is(img, svg) {
+        img,
+        svg {
           display: block;
           width: auto;
           max-width: 100%;
@@ -407,7 +415,8 @@
       250ms border-color;
 
     // Link on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       background-color: var(--md-default-fg-color--lightest);
       border-color: transparent;
     }
@@ -435,7 +444,8 @@
         }
 
         // Navigation link on focus/hover
-        &:is(:focus, :hover) {
+        &:focus,
+        &:hover {
           color: var(--md-accent-fg-color);
         }
       }

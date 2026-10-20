@@ -72,7 +72,8 @@
       transition: background-color 400ms, color 400ms;
 
       // Search on focus/hover
-      &:is(:focus, :hover) {
+      &:focus,
+      &:hover {
         color: var(--md-primary-bg-color);
         background-color: hsla(0, 0%, 100%, 0.12);
       }

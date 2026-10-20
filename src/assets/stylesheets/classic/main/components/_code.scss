@@ -81,7 +81,8 @@
     }
 
     // Button on focus/hover
-    &:is(.focus-visible, :hover) {
+    &.focus-visible,
+    &:hover {
       color: var(--md-accent-fg-color);
     }
 

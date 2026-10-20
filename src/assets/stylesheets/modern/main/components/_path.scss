@@ -87,7 +87,8 @@
     transition: color 250ms;
 
     // Navigation path link on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       color: var(--md-accent-fg-color);
     }
   }

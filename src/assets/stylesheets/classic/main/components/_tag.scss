@@ -70,7 +70,8 @@
         background-color 125ms;
 
       // Linked tag on focus/hover
-      &:is(:focus, :hover) {
+      &:focus,
+      &:hover {
         color: var(--md-accent-bg-color);
         background-color: var(--md-accent-fg-color);
       }
@@ -106,7 +107,8 @@
     }
 
     // Linked tag on focus/hover
-    &[href]:is(:focus, :hover)::before {
+    &[href]:focus::before,
+    &[href]:hover::before {
       background-color: var(--md-accent-bg-color);
     }
   }

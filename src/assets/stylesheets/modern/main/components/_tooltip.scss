@@ -123,7 +123,8 @@
   }
 
   // Show outline on target and for keyboard devices
-  :is(.focus-visible > &, &:target) {
+  .focus-visible > &,
+  &:target {
     outline: var(--md-accent-fg-color) auto;
   }
 
@@ -247,7 +248,8 @@
         }
 
         // Annotation marker for active tooltip or on hover
-        :is(.md-tooltip--active + &, :hover > &) {
+        .md-tooltip--active + &,
+        :hover > & {
           background-color: var(--md-accent-fg-color);
         }
       }

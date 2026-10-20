@@ -85,7 +85,8 @@
     color: var(--md-default-fg-color--light);
 
     // Navigation path link on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       color: var(--md-accent-fg-color);
     }
   }

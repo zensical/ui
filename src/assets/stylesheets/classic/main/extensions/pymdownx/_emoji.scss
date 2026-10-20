@@ -31,7 +31,9 @@
 .md-typeset {
 
   // Emoji and icon container
-  :is(.emojione, .twemoji, .gemoji) {
+  .emojione,
+  .twemoji,
+  .gemoji {
     --md-icon-size: #{px2em(18px)};
 
     display: inline-flex;
@@ -53,7 +55,10 @@
   }
 
   // Icon with size modifier
-  :is(.lg, .xl, .xxl, .xxxl) {
+  .lg,
+  .xl,
+  .xxl,
+  .xxxl {
     vertical-align: text-bottom;
   }
 

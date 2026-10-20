@@ -46,14 +46,16 @@
 
     // Grid card container - if all grid items should render as cards, the
     // `.cards` class can be added, which moves list items up one level.
-    &.cards > :is(ul, ol) {
+    &.cards > ul,
+    &.cards > ol {
       display: contents;
     }
 
     // Grid card - a card is either a list item of a grid container with the
     // `.cards` class or a single element with the `.card` class, which allows
     // to align cards with other components (admonitions, tabs, ...) in grids.
-    &.cards > :is(ul, ol) > li,
+    &.cards > ul > li,
+    &.cards > ol > li,
     > .card {
       display: block;
       padding: px2rem(16px);
@@ -66,7 +68,8 @@
         box-shadow       250ms;
 
       // Grid list item on focus/hover
-      &:is(:focus-within, :hover) {
+      &:focus-within,
+      &:hover {
         border-color: transparent;
         box-shadow: var(--md-shadow-z2);
       }
@@ -93,7 +96,9 @@
     }
 
     // Grid item: admonition
-    > :is(.admonition, details) {
+    > .admonition,
+    > .md-typeset details,
+    > details {
       margin-block: 0;
     }
 

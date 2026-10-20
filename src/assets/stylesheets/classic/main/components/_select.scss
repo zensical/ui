@@ -57,7 +57,8 @@
     }
 
     // Selection bubble on parent focus/hover
-    .md-select:is(:focus-within, :hover) & {
+    .md-select:focus-within &,
+    .md-select:hover & {
       max-height: min(75vh, px2rem(560px));
       opacity: 1;
       transition:
@@ -124,7 +125,8 @@
       color            250ms;
 
     // Link on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       color: var(--md-accent-fg-color);
     }
 

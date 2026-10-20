@@ -106,7 +106,8 @@
       opacity  250ms 250ms;
 
     // Version selection list on parent focus/hover
-    .md-version:is(:focus-within, :hover) & {
+    .md-version:focus-within &,
+    .md-version:hover & {
       max-height: px2rem(200px);
       opacity: 1;
       transition:
@@ -147,7 +148,8 @@
       background-color 250ms;
 
     // Link on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       color: var(--md-accent-fg-color);
     }
 

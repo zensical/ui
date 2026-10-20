@@ -60,7 +60,8 @@
       background-color 125ms;
 
     // Pagination link on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       color: var(--md-accent-fg-color);
       background-color: var(--md-accent-fg-color--transparent);
 

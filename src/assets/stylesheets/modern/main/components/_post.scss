@@ -74,7 +74,8 @@
       transition: color 125ms;
 
       // Navigation link on focus/hover
-      &:is(:focus, :hover) {
+      &:focus,
+      &:hover {
         color: var(--md-accent-fg-color);
       }
     }
@@ -249,7 +250,10 @@
   }
 
   // Keep post links free of primary navigation highlights
-  .md-nav__link:is([href], [for]):is(:focus, :hover) {
+  .md-nav__link[href]:focus,
+  .md-nav__link[href]:hover,
+  .md-nav__link[for]:focus,
+  .md-nav__link[for]:hover {
     color: var(--md-accent-fg-color);
     background-color: transparent;
   }

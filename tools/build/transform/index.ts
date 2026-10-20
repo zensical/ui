@@ -105,7 +105,6 @@ export function transformStyle(
         require("autoprefixer"),
         require("postcss-logical"),
         require("postcss-dir-pseudo-class"),
-        require("postcss-pseudo-is"),
         require("postcss-inline-svg")({
           paths: [
             `${base}/.icons`

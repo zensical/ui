@@ -104,7 +104,8 @@
       opacity 250ms;
 
     // Navigation tabs link on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       color: inherit;
       opacity: 1;
     }

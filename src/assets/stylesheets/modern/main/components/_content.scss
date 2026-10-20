@@ -109,7 +109,8 @@
       }
 
       // Button on focus/hover
-      &:is(:focus, :hover) {
+      &:focus,
+      &:hover {
         color: var(--md-accent-fg-color);
         background-color: var(--md-accent-fg-color--transparent);
 

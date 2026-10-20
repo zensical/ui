@@ -52,7 +52,8 @@
     }
 
     // Button on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       color: var(--md-default-fg-color--light);
       opacity: 0.8;
     }
@@ -63,7 +64,8 @@
       background-color: var(--md-primary-fg-color);
 
       // Button on focus/hover
-      &:is(:focus, :hover) {
+      &:focus,
+      &:hover {
         color: var(--md-primary-bg-color);
         opacity: 0.8;
       }
@@ -84,7 +86,8 @@
       box-shadow 250ms;
 
     // Input on focus/hover
-    &:is(:focus, :hover) {
+    &:focus,
+    &:hover {
       border-bottom-color: var(--md-accent-fg-color);
       box-shadow: var(--md-shadow-z2);
     }
