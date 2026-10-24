@@ -72,7 +72,7 @@ let sequence = 0
  */
 function fetchScripts(): Observable<void> {
   return typeof mermaid === "undefined" || mermaid instanceof Element
-    ? watchScript("https://unpkg.com/mermaid@11/dist/mermaid.min.js")
+    ? watchScript("https://unpkg.com/mermaid@12/dist/mermaid.min.js")
     : of(undefined)
 }
 
@@ -95,7 +95,12 @@ export function mountMermaid(
     .pipe(
       tap(() => mermaid.initialize({
         startOnLoad: false,
+        // Keep colors in CSS so palette changes don't require re-rendering
+        theme: "default",
         themeCSS,
+        themeVariables: {
+          dropShadow: "none"
+        },
         sequence: {
           actorFontSize: "16px", // Hack: mitigate https://bit.ly/3y0NEi3
           messageFontSize: "16px",
@@ -116,7 +121,7 @@ export function mountMermaid(
     const text = el.textContent
 
     // Render and inject diagram
-    const { svg, fn } = await mermaid.render(id, text)
+    const { svg, bindFunctions } = await mermaid.render(id, text)
 
     // Create a shadow root and inject diagram
     const shadow = host.attachShadow({ mode: "closed" })
@@ -124,7 +129,7 @@ export function mountMermaid(
 
     // Replace code block with diagram and bind functions
     el.replaceWith(host)
-    fn?.(shadow)
+    bindFunctions?.(shadow)
   })
 
   // Create and return component
