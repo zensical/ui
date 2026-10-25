@@ -318,6 +318,9 @@ export function setupInstantNavigation(
   of(document)
     .subscribe(resolve)
 
+  // Keep the mounted path separate from a URL whose document is still loading.
+  let pathname = getLocation().pathname
+
   // --------------------------------------------------------------------------
   // Navigation interception
   // --------------------------------------------------------------------------
@@ -377,7 +380,17 @@ export function setupInstantNavigation(
   // intercepted by other parts of the application, which can synchronously back
   // up or restore state before or after instant navigation happens.
   merge(instant$, history$)
-    .subscribe(location$)
+    .subscribe(url => {
+      // WebKit favors the fragment on cross-document history navigation.
+      // Same-document history and cancelled loads retain their saved position.
+      if (
+        navigator.vendor === "Apple Computer, Inc." &&
+        url.pathname !== pathname && url.hash
+      )
+        history.replaceState(null, "")
+
+      location$.next(url)
+    })
 
   // --------------------------------------------------------------------------
   // Fetching and parsing
@@ -410,6 +423,7 @@ export function setupInstantNavigation(
       // contents into the currently active document
       switchMap(resolve),
       switchMap(inject),
+      tap(() => { pathname = getLocation().pathname }),
       share()
     )
 

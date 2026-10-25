@@ -126,8 +126,9 @@ function reveal(el: HTMLElement, target: HTMLElement): void {
 export function mountContentTarget(
   el: HTMLElement, { target$ }: MountOptions
 ): Observable<Component<ContentTarget>> {
+  const initial = window.location.href
   return target$.pipe(
-    switchMap(target => defer(() => {
+    switchMap((target, index) => defer(() => {
       const id = target.id
       const current = document.getElementById(id) || target
       if (!el.contains(current))
@@ -139,6 +140,19 @@ export function mountContentTarget(
       const offset: ViewportOffset | null = feature("navigation.instant")
         ? history.state
         : null
+
+      // Preserve native full-page restoration after revealing hidden targets.
+      // WebKit favors fragments instead, so retain explicit alignment there.
+      // Later anchor clicks also need alignment after revealing their target.
+      const navigation = performance.getEntriesByType("navigation")[0] as
+        PerformanceNavigationTiming | undefined
+      const restoring = index === 0 && href === initial &&
+        !feature("navigation.instant") &&
+        navigator.vendor !== "Apple Computer, Inc." &&
+        document.readyState !== "complete" && (
+          navigation?.type === "reload" ||
+          navigation?.type === "back_forward"
+        )
 
       // Reveal the target immediately so synchronous containers, such as
       // details and content tabs, don't need to wait for a rendering cycle.
@@ -188,7 +202,7 @@ export function mountContentTarget(
         tap(state => {
           if (typeof offset?.y === "number")
             window.scrollTo(offset.x, offset.y)
-          else
+          else if (!restoring)
             state.target.scrollIntoView()
         }),
         map(state => ({ ref: state.target, id }))
