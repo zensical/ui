@@ -80,16 +80,6 @@ jobs:
           python tools/check-package.py artifacts
           python -m twine check --strict artifacts/*.whl artifacts/zensical_ui-*.tar.gz
 
-      - name: Create artifacts archive
-        run: tar -C dist -czf artifacts/templates.tar.gz .
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: templates
-          path: artifacts/templates.tar.gz
-          if-no-files-found: error
-
       - name: Upload Python distributions
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
@@ -153,12 +143,6 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: templates
-          path: artifacts
-
       - name: Download Python distributions
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:

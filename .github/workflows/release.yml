@@ -105,12 +105,6 @@ jobs:
       - name: Set up mono
         uses: zensical/mono@2be38f5a76677c8e5c342f269b78aaccc8631b7c # v0
 
-      - name: Download artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: templates
-          path: artifacts
-
       - name: Download Python distributions
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
