@@ -100,14 +100,20 @@ jobs:
           if-no-files-found: error
 
   test:
-    name: Test (${{ matrix.os }}, ${{ matrix.python-version }})
+    name: ${{ matrix.os.name }} (${{ matrix.python-version }})
     permissions:
       contents: read
     needs: build
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os.runner }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os:
+          - name: Linux
+            runner: ubuntu-latest
+          - name: Windows
+            runner: windows-latest
+          - name: macOS
+            runner: macos-latest
         python-version: ["3.11", "3.14"]
     steps:
       - name: Set up Python
