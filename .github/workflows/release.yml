@@ -30,17 +30,18 @@ on:
     branches:
       - master
 
-permissions:
-  contents: write     # Required for tags and releases
-  attestations: write # Required for attestations
-  id-token: write     # Required for OIDC
-
 jobs:
   build:
     name: Build
     if: |
       github.event.pull_request.merged == true &&
       startsWith(github.event.pull_request.head.ref, 'release/')
+    # Allow signing in the reusable workflow; only its attestation job requests
+    # these write permissions. Build and test jobs explicitly remain read-only.
+    permissions:
+      contents: read
+      attestations: write
+      id-token: write
     uses: ./.github/workflows/build.yml
     with:
       ref: ${{ github.event.pull_request.merge_commit_sha }}
@@ -50,69 +51,123 @@ jobs:
     name: Create tag
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: write
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: 0
+          persist-credentials: true
 
       - name: Determine version
         id: version
+        env:
+          RELEASE_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
-          BRANCH="${{ github.event.pull_request.head.ref }}"
-          VERSION=${BRANCH#release/}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          VERSION=${RELEASE_BRANCH#release/}
+          PACKAGE_VERSION=$(python -c 'import json; print(json.load(open("package.json"))["version"])')
+          if [ "${VERSION#v}" != "$PACKAGE_VERSION" ]; then
+            echo "Release branch and package.json versions differ"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a $VERSION -m "Release $VERSION"
-          git push origin $VERSION
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
 
   release:
     name: Create release
     runs-on: ubuntu-latest
     needs: tag
+    permissions:
+      contents: write
     env:
       VERSION: ${{ needs.tag.outputs.version }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Set up mono
-        uses: zensical/mono@v0
+        uses: zensical/mono@2be38f5a76677c8e5c342f269b78aaccc8631b7c # v0
 
       - name: Download artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
+          name: templates
           path: artifacts
-          merge-multiple: true
+
+      - name: Download Python distributions
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: python
+          path: artifacts
 
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          mono version changelog -s $VERSION > notes.txt
-          gh release create $VERSION \
-            --title ${VERSION#v} \
+          mono version changelog -s "$VERSION" > notes.txt
+          gh release create "$VERSION" \
+            --title "${VERSION#v}" \
             --notes-file notes.txt \
+            --verify-tag \
             --draft
 
       - name: Upload release artifacts
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload $VERSION artifacts/*
+        run: gh release upload "$VERSION" artifacts/*
 
-      - name: Publish release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release edit $VERSION --draft=false
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    needs: release
+    environment:
+      name: pypi
+      url: https://pypi.org/p/zensical-ui
+    permissions:
+      id-token: write
+    steps:
+      - name: Download Python distributions
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: python
+          path: artifacts
+
+      - name: Publish to pypi.org
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # release/v1
+        with:
+          packages-dir: artifacts
+          attestations: true
+          skip-existing: true
+
+  publish-release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    needs:
+      - tag
+      - publish
+    permissions:
+      contents: write
+    env:
+      GH_REPO: ${{ github.repository }}
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.tag.outputs.version }}
+    steps:
+      - name: Publish GitHub release
+        run: gh release edit "$VERSION" --draft=false
