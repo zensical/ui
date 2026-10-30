@@ -36,9 +36,9 @@
 
       <!-- Page description -->
       {% if page.meta and page.meta.description %}
-        <meta name="description" content="{{ page.meta.description }}" />
+        <meta name="description" content="{{ page.meta.description | e }}" />
       {% elif config.site_description %}
-        <meta name="description" content="{{ config.site_description }}" />
+        <meta name="description" content="{{ config.site_description | e }}" />
       {% endif %}
 
       <!-- Page author -->
