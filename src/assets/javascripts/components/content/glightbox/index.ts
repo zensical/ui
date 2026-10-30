@@ -28,10 +28,13 @@ import {
   Observable,
   catchError,
   defer,
+  fromEvent,
   map,
   of,
   shareReplay,
-  switchMap
+  startWith,
+  switchMap,
+  tap
 } from "rxjs"
 
 import { Component } from "../../_"
@@ -106,6 +109,7 @@ export function mountGLightbox(
   glightbox$ ||= fetchScripts()
     .pipe(
       map(() => new GLightbox({
+        selector: ".glightbox:not([data-md-glightbox-disabled])",
         touchNavigation: true,
         loop: false,
         zoomable: true,
@@ -134,9 +138,23 @@ export function mountGLightbox(
   return styles$
     .pipe(
       switchMap(() => glightbox$),
-      switchMap(glightbox => {
-        glightbox.reload()
-        return els.map(el => ({ ref: el }))
-      })
+      switchMap(glightbox => fromEvent(els, "click", { capture: true })
+        .pipe(
+          startWith(undefined),
+          tap(() => {
+
+            // Hidden image variants are excluded before GLightbox handles the
+            // click, so the gallery is updated after color scheme changes.
+            for (const el of els) {
+              const image = el.querySelector("img")
+              el.toggleAttribute("data-md-glightbox-disabled",
+                image !== null && getComputedStyle(image).display === "none"
+              )
+            }
+            glightbox.reload()
+          }),
+          switchMap(() => els.map(el => ({ ref: el })))
+        )
+      )
     )
 }
