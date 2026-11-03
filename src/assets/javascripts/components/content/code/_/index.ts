@@ -230,11 +230,11 @@ export function mountCodeBlock(
     const buttons: HTMLElement[] = []
     const parent = el.closest("pre")!
 
-    // Check if there's a parent element with an id, and use that id, otherwise
+    // Check if the code block or its highlight wrapper has an id, otherwise
     // generate a new one. This is necessary to allow for authors to define
     // unique ids for code blocks - see https://t.ly/q7UEq
-    const unique = parent.closest("[id]")
-    const id = unique ? unique.id : sequence++
+    const unique = parent.id ? parent : parent.closest(".highlight")
+    const id = unique?.id || sequence++
     parent.id = `__code_${id}`
 
     // Handle code annotations and highlights
