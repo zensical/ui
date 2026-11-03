@@ -70,15 +70,29 @@
     white-space: nowrap;
     list-style: none;
     contain: content;
-    // Hack: don't show scrollbar when navigation tabs overflow, which should
-    // only happen in rare occasions, as adding too many top level sections is
-    // discouraged, since hiding content on horitontal axis doesn't lead to a
-    // good user experience. It's just harder to discover.
     scrollbar-width: none;
 
-    // Hack: see above
     &::-webkit-scrollbar {
       display: none;
+    }
+
+    // Hint at hidden tabs, blending each edge back in as its end is reached.
+    mask-image: linear-gradient(
+      to right,
+      rgb(0 0 0 / var(--md-tabs-start-opacity, 1)),
+      #000 48px,
+      #000 calc(100% - 48px),
+      rgb(0 0 0 / var(--md-tabs-end-opacity, 1))
+    );
+
+    [dir="rtl"] & {
+      mask-image: linear-gradient(
+        to left,
+        rgb(0 0 0 / var(--md-tabs-start-opacity, 1)),
+        #000 48px,
+        #000 calc(100% - 48px),
+        rgb(0 0 0 / var(--md-tabs-end-opacity, 1))
+      );
     }
   }
 

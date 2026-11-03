@@ -392,7 +392,9 @@ export function mountCodeBlock(
             filter(hash => hash.startsWith(`__codelineno-${id}-`))
           )
 
-        hash$.subscribe(hash => {
+        // Selection changes update highlighting without requesting navigation.
+        const selection$ = new Subject<string>()
+        merge(hash$, selection$).subscribe(hash => {
           const [, , line] = hash.split("-")
           const range = line.split(":").map(value => +value - base + 1)
           if (range.length === 1)
@@ -485,11 +487,7 @@ export function mountCodeBlock(
             hash += `${range[0]}:${range[1]}`
           }
           history.replaceState({}, "", hash)
-          // @hack dispatch artificial hashchange event
-          window.dispatchEvent(new HashChangeEvent("hashchange", {
-            newURL: window.location.origin + window.location.pathname + hash,
-            oldURL: window.location.href
-          }))
+          selection$.next(hash.slice(1))
         })
       }
     }

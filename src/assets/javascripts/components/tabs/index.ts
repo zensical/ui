@@ -29,7 +29,12 @@ import {
   defer,
   distinctUntilKeyChanged,
   finalize,
+  from,
+  fromEvent,
+  ignoreElements,
   map,
+  merge,
+  mergeWith,
   of,
   switchMap,
   tap
@@ -38,6 +43,7 @@ import {
 import { feature } from "~/_"
 import {
   Viewport,
+  getElement,
   watchElementSize,
   watchViewportAt
 } from "~/browser"
@@ -132,6 +138,31 @@ export function mountTabs(
       }
     })
 
+    // Fade either edge while tabs remain hidden beyond it.
+    const list = getElement(".md-tabs__list", el)
+    const overflow$ = merge(
+      fromEvent(list, "scroll"),
+      fromEvent(window, "resize"),
+      watchElementSize(list),
+      from(document.fonts.ready)
+    ).pipe(
+      tap(() => {
+        const offset = Math.abs(list.scrollLeft)
+        const remaining = list.scrollWidth - list.clientWidth - offset
+        list.style.setProperty("--md-tabs-start-opacity",
+          `${1 - Math.min(1, Math.max(0, offset) / 24)}`
+        )
+        list.style.setProperty("--md-tabs-end-opacity",
+          `${1 - Math.min(1, Math.max(0, remaining) / 24)}`
+        )
+      }),
+      ignoreElements(),
+      finalize(() => {
+        list.style.removeProperty("--md-tabs-start-opacity")
+        list.style.removeProperty("--md-tabs-end-opacity")
+      })
+    )
+
     // Create and return component
     return (
       feature("navigation.tabs.sticky")
@@ -139,6 +170,7 @@ export function mountTabs(
         : watchTabs(el, options)
     )
       .pipe(
+        mergeWith(overflow$),
         tap(state => push$.next(state)),
         finalize(() => push$.complete()),
         map(state => ({ ref: el, ...state }))
