@@ -239,6 +239,7 @@ kbd {
   // Unformatted content
   pre {
     position: relative;
+    isolation: isolate;
     display: flow-root;
     line-height: 1.5;
 
