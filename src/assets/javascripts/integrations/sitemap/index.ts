@@ -23,7 +23,7 @@
  * IN THE SOFTWARE.
  */
 
-import { Observable, catchError, map, of, share } from "rxjs";
+import { Observable, catchError, map, of, shareReplay } from "rxjs";
 
 import { getElement, getElements, requestXML } from "~/browser";
 
@@ -178,6 +178,6 @@ export function fetchSitemap(base: URL | string): Observable<Sitemap> {
   return requestXML(new URL("sitemap.xml", base)).pipe(
     map((document) => extract(document, new URL(base))),
     catchError(() => of(new Map())),
-    share(),
+    shareReplay(1),
   );
 }
