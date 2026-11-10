@@ -23,7 +23,6 @@
  * IN THE SOFTWARE.
  */
 
-import { ProjectSchema, ReleaseSchema } from "@gitbeaker/core"
 import {
   EMPTY,
   Observable,
@@ -36,6 +35,25 @@ import {
 import { requestJSON } from "~/browser"
 
 import { SourceFacts } from "../_"
+
+/* ----------------------------------------------------------------------------
+ * Helper types
+ * ------------------------------------------------------------------------- */
+
+/**
+ * GitLab project (partial)
+ */
+interface Project {
+  star_count: number                   // Star count
+  forks_count: number                  // Fork count
+}
+
+/**
+ * GitLab release (partial)
+ */
+interface Release {
+  tag_name: string                     // Tag name
+}
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -56,7 +74,7 @@ export function fetchSourceFactsFromGitLab(
   return zip(
 
     // Fetch version
-    requestJSON<ReleaseSchema>(`${url}/releases/permalink/latest`)
+    requestJSON<Release>(`${url}/releases/permalink/latest`)
       .pipe(
         catchError(() => EMPTY), // @todo refactor instant loading
         map(({ tag_name }) => ({
@@ -66,7 +84,7 @@ export function fetchSourceFactsFromGitLab(
       ),
 
     // Fetch stars and forks
-    requestJSON<ProjectSchema>(url)
+    requestJSON<Project>(url)
       .pipe(
         catchError(() => EMPTY), // @todo refactor instant loading
         map(({ star_count, forks_count }) => ({

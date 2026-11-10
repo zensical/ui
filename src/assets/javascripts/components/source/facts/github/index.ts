@@ -23,7 +23,6 @@
  * IN THE SOFTWARE.
  */
 
-import { Repo, User } from "github-types"
 import {
   EMPTY,
   Observable,
@@ -46,6 +45,21 @@ import { SourceFacts } from "../_"
  */
 interface Release {
   tag_name: string                     // Tag name
+}
+
+/**
+ * GitHub repository (partial)
+ */
+interface Repo {
+  stargazers_count: number             // Star count
+  forks_count: number                  // Fork count
+}
+
+/**
+ * GitHub user or organization (partial)
+ */
+interface User {
+  public_repos: number                 // Repository count
 }
 
 /* ----------------------------------------------------------------------------
