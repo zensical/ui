@@ -141,9 +141,9 @@ jobs:
           - name: Linux
             runner: ubuntu-26.04
           - name: Windows
-            runner: windows-latest
+            runner: windows-2022
           - name: macOS
-            runner: macos-latest
+            runner: macos-15
         python-version: ["3.11", "3.14"]
     steps:
       - name: Set up Python
