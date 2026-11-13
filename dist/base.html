@@ -21,6 +21,18 @@
       {% if page.canonical_url %}
         <link rel="canonical" href="{{ page.canonical_url }}">
       {% endif %}
+      {% for rss in config.plugins.rss.config %}
+        {% if rss.config.enabled %}
+          {% if rss.config.rss_feed_enabled %}
+            <link rel="alternate" type="application/rss+xml" title="{{ lang.t('rss.created') | e }}" href="{{ rss.config.feeds_filenames.rss_created | url }}">
+            <link rel="alternate" type="application/rss+xml" title="{{ lang.t('rss.updated') | e }}" href="{{ rss.config.feeds_filenames.rss_updated | url }}">
+          {% endif %}
+          {% if rss.config.json_feed_enabled %}
+            <link rel="alternate" type="application/feed+json" title="JSON feed" href="{{ rss.config.feeds_filenames.json_created | url }}">
+            <link rel="alternate" type="application/feed+json" title="JSON feed of updated content" href="{{ rss.config.feeds_filenames.json_updated | url }}">
+          {% endif %}
+        {% endif %}
+      {% endfor %}
       {% if config.plugins.llmstxt and config.plugins.llmstxt.config.enabled %}
         <link rel="describedby" href="{{ 'llms.txt' | url }}">
         {% if page.markdown_url %}
