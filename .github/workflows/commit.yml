@@ -30,29 +30,49 @@ on:
       - synchronize
       - reopened
 
+permissions: {}
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{
+        github.event_name == 'pull_request' &&
+        github.event.action != 'closed' &&
+        github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: >-
+    ${{ github.event_name == 'pull_request' &&
+        github.event.action != 'closed' }}
+
 jobs:
   validate:
     name: Validate
-    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Set up mono
-        uses: zensical/mono@v0
+        uses: zensical/mono@c6ece01fa0d0b2f46300e5998b1f07a5b77be616
 
       - name: Get commit messages
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          BASE="${{ github.event.pull_request.base.sha }}"
-          HEAD="${{ github.event.pull_request.head.sha }}"
           git log "$BASE..$HEAD" --format=%h > commits.txt
 
       - name: Validate commit messages
         run: |
           while IFS= read -r id; do
             [ -z "$id" ] && continue
-            mono validate commit --id $id
+            mono validate commit --id "$id"
           done < commits.txt

@@ -39,15 +39,31 @@ on:
         required: true
         type: boolean
 
+permissions: {}
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{
+        github.event_name == 'pull_request' &&
+        github.event.action != 'closed' &&
+        github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: >-
+    ${{ github.event_name == 'pull_request' &&
+        github.event.action != 'closed' }}
+
 jobs:
   build:
     name: Templates
     permissions:
       contents: read
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ inputs.ref || github.sha }}
           persist-credentials: false
@@ -58,14 +74,36 @@ jobs:
           python-version: "3.14"
 
       - name: Set up Node.js runtime
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24.x
-          cache: npm
-          cache-dependency-path: package-lock.json
+          package-manager-cache: false
+
+      - name: Restore npm cache
+        id: npm-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ${{ runner.temp }}/npm-cache
+          key: >-
+            npm-${{ runner.os }}-${{ runner.arch }}-node24-${{
+                hashFiles('package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-${{ runner.arch }}-node24-
 
       - name: Set up Node.js dependencies
-        run: npm ci
+        env:
+          NPM_CONFIG_CACHE: ${{ runner.temp }}/npm-cache
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Save npm cache
+        if: >-
+          ${{ steps.npm-cache.outputs.cache-hit != 'true' &&
+              github.event_name == 'push' &&
+              github.ref == 'refs/heads/master' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ${{ runner.temp }}/npm-cache
+          key: ${{ steps.npm-cache.outputs.cache-primary-key }}
 
       - name: Build artifact
         run: npm run build
@@ -78,7 +116,8 @@ jobs:
       - name: Check Python distributions
         run: |
           python tools/check-package.py artifacts
-          python -m twine check --strict artifacts/*.whl artifacts/zensical_ui-*.tar.gz
+          python -m twine check --strict \
+            artifacts/*.whl artifacts/zensical_ui-*.tar.gz
 
       - name: Upload Python distributions
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -91,15 +130,16 @@ jobs:
 
   test:
     name: ${{ matrix.os.name }} (${{ matrix.python-version }})
+    needs: build
     permissions:
       contents: read
-    needs: build
     runs-on: ${{ matrix.os.runner }}
+    timeout-minutes: 60
     strategy:
       matrix:
         os:
           - name: Linux
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
           - name: Windows
             runner: windows-latest
           - name: macOS
@@ -118,7 +158,9 @@ jobs:
           path: artifacts
 
       - name: Install package
-        run: python -m pip install --no-index --no-deps --find-links artifacts zensical-ui
+        run: >-
+          python -m pip install --no-index --no-deps
+          --find-links artifacts zensical-ui
 
       - name: Check installed resources
         run: >-
@@ -137,11 +179,12 @@ jobs:
     needs:
       - build
       - test
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       attestations: write
       id-token: write
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
     steps:
       - name: Download Python distributions
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
@@ -149,7 +192,7 @@ jobs:
           name: python
           path: artifacts
 
-      - name: Create artifact attestations
+      - name: Create artifact attestation
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
         with:
           show-summary: false
