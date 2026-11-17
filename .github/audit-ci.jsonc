@@ -1,0 +1,33 @@
+{
+  "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
+  "low": true,
+  "package-manager": "npm",
+  "extra-args": ["--package-lock-only", "--ignore-scripts"],
+  // https://github.com/advisories/GHSA-fc5q-39xc-vjpf
+  // Reviewed November 17, 2026; no patched picomatch release is available.
+  // Reassess these call sites on dependency or build-tool changes, and remove
+  // the exceptions once a compatible fix is available. Other paths still fail.
+  "allowlist": [
+    {
+      // npm-run-all2 9.0.4 uses picomatch 4.0.7 in lib/match-tasks.js.
+      // Our only invocation is the fixed upgrade:* pattern in package.json;
+      // it cannot supply the repeated extglobs required by the advisory.
+      "GHSA-fc5q-39xc-vjpf|npm-run-all2>picomatch": {
+        "active": true,
+        "expiry": "2026-12-17T00:00:00Z",
+        "notes": "Only the fixed upgrade:* pattern is used."
+      }
+    },
+    {
+      // Sass 1.108.1 optionally includes @parcel/watcher 2.6.0.
+      // Its wrapper.js compiles ignore globs with picomatch.makeRe().
+      // tools/build/transform/index.ts uses Sass compile(), not its watcher.
+      // Development watch mode uses chokidar in tools/build/_/index.ts.
+      "GHSA-fc5q-39xc-vjpf|@parcel/watcher>picomatch": {
+        "active": true,
+        "expiry": "2026-12-17T00:00:00Z",
+        "notes": "UI compiles Sass without Parcel watcher ignore globs."
+      }
+    }
+  ]
+}

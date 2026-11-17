@@ -70,4 +70,6 @@ jobs:
           package-manager-cache: false
 
       - name: Audit dependencies
-        run: npm audit --package-lock-only --ignore-scripts
+        run: >-
+          npx --yes --ignore-scripts audit-ci@7.1.0
+          --config .github/audit-ci.jsonc

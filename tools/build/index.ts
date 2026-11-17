@@ -210,8 +210,8 @@ const manifest$ = merge(
     scan((prev, mapping) => (
       mapping.reduce((next, [key, value]) => (
         next.set(
-          key.replace("\\", "/"),
-          value.replace("\\", "/").replace(`${base}/`, "")
+          key.replace(/\\/g, "/"),
+          value.replace(/\\/g, "/").replace(`${base}/`, "")
         )
       ), prev)
     ), new Map<string, string>()),
