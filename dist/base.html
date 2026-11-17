@@ -2,6 +2,8 @@
   This file was automatically generated - do not edit
 -#}
 {% import "partials/language.html" as lang with context %}
+{% set revision_date = config.plugins["git-revision-date-localized"] %}
+{% set timeago = revision_date and revision_date.config.enabled and revision_date.config.type == "timeago" %}
 <!doctype html>
 <html lang="{{ lang.t('language') }}" class="no-js">
   <head>
@@ -77,6 +79,9 @@
           {% set href = 'assets/stylesheets/classic/palette.813d4b3f.min.css' | url %}
         {% endif %}
         <link rel="stylesheet" href="{{ href }}">
+      {% endif %}
+      {% if timeago %}
+        <link rel="stylesheet" href="{{ 'assets/stylesheets/git-revision-date-localized.50f6a369.min.css' | url }}">
       {% endif %}
       {% include "partials/icons.html" %}
     {% endblock %}
@@ -294,6 +299,9 @@
     {% endblock %}
     {% block scripts %}
       <script src="{{ 'assets/javascripts/bundle.3cb411a8.min.js' | url }}"></script>
+      {% if timeago %}
+        <script src="{{ 'assets/javascripts/git-revision-date-localized.592bf61f.min.js' | url }}"></script>
+      {% endif %}
       {% for script in config.extra_javascript %}
         {{ script | script_tag }}
       {% endfor %}

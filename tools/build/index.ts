@@ -177,7 +177,7 @@ const stylesheets$ = resolve("**/[!_]*.scss", { cwd: "src" })
   )
 
 // Transform scripts
-const javascripts$ = resolve("**/{bundle,search}.ts", { cwd: "src" })
+const javascripts$ = resolve("**/{bundle,search,git-revision-date-localized}.ts", { cwd: "src" })
   .pipe(
     mergeMap(file => zip(
       of(ext(file, ".js")),
