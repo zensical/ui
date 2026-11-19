@@ -248,7 +248,6 @@
   // Sidebar scroll wrapper
   &__scrollwrap {
     overflow-y: auto;
-    scrollbar-color: var(--md-default-fg-color--lighter) transparent;
     // Hack: promote to own layer to reduce jitter
     backface-visibility: hidden;
 
@@ -259,8 +258,14 @@
       // to the bottom if `scroll-snap-type` is set on the initial render. For
       // this reason, we disable scroll snapping until this is resolved (#1667).
       // scroll-snap-type: y mandatory;
-      scrollbar-width: thin;
     }
+  }
+
+  // Scrollbars for navigation and table of contents
+  &__scrollwrap,
+  &--secondary &__inner {
+    scrollbar-color: var(--md-default-fg-color--lighter) transparent;
+    scrollbar-width: thin;
 
     // Webkit scrollbar
     &::-webkit-scrollbar {
@@ -268,7 +273,7 @@
       height: px2rem(4px);
     }
 
-    // Sidebar scroll wrapper on focus/hover
+    // Scroll container on focus/hover
     &:focus-within,
     &:hover {
       scrollbar-color: var(--md-accent-fg-color) transparent;
