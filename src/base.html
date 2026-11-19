@@ -24,6 +24,8 @@
 -->
 
 {% import "partials/language.html" as lang with context %}
+{% set revision_date = config.plugins["git-revision-date-localized"] %}
+{% set timeago = revision_date and revision_date.config.enabled and revision_date.config.type == "timeago" %}
 
 <!doctype html>
 <html lang="{{ lang.t('language') }}" class="no-js">
@@ -156,6 +158,14 @@
           {% set href = 'assets/stylesheets/classic/palette.css' | url %}
         {% endif %}
         <link rel="stylesheet" href="{{ href }}" />
+      {% endif %}
+
+      <!-- Localized relative dates -->
+      {% if timeago %}
+        <link
+          rel="stylesheet"
+          href="{{ 'assets/stylesheets/git-revision-date-localized.css' | url }}"
+        />
       {% endif %}
 
       <!-- Custom icons -->
@@ -505,6 +515,11 @@
     <!-- Theme-related JavaScript -->
     {% block scripts %}
       <script src="{{ 'assets/javascripts/bundle.js' | url }}"></script>
+
+      <!-- Localized relative dates -->
+      {% if timeago %}
+        <script src="{{ 'assets/javascripts/git-revision-date-localized.js' | url }}"></script>
+      {% endif %}
 
       <!-- Custom JavaScript -->
       {% for script in config.extra_javascript %}
