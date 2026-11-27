@@ -11,7 +11,10 @@
   {% if "content.action.edit" in features %}
     <a href="{{ page.edit_url }}" title="{{ lang.t('action.edit') }}" class="md-content__button md-icon" rel="edit">
       {% set icon = config.theme.icon.edit or "material/file-edit-outline" %}
-      {% include ".icons/" ~ icon ~ ".svg" %}
+      <span aria-hidden="true">
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </span>
+      <span class="md-visually-hidden">{{ lang.t('action.edit') }}</span>
     </a>
   {% endif %}
   {% if "content.action.view" in features %}
@@ -22,7 +25,10 @@
     {% endif %}
     <a href="{{ page.edit_url | replace(part, '/raw/') }}" title="{{ lang.t('action.view') }}" class="md-content__button md-icon">
       {% set icon = config.theme.icon.view or "material/file-eye-outline" %}
-      {% include ".icons/" ~ icon ~ ".svg" %}
+      <span aria-hidden="true">
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </span>
+      <span class="md-visually-hidden">{{ lang.t('action.view') }}</span>
     </a>
   {% endif %}
 {% endif %}

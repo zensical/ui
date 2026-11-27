@@ -48,7 +48,10 @@
       rel="edit"
     >
       {% set icon = config.theme.icon.edit or "material/file-edit-outline" %}
-      {% include ".icons/" ~ icon ~ ".svg" %}
+      <span aria-hidden="true">
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </span>
+      <span class="md-visually-hidden">{{ lang.t('action.edit') }}</span>
     </a>
   {% endif %}
 
@@ -65,7 +68,10 @@
       class="md-content__button md-icon"
     >
       {% set icon = config.theme.icon.view or "material/file-eye-outline" %}
-      {% include ".icons/" ~ icon ~ ".svg" %}
+      <span aria-hidden="true">
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </span>
+      <span class="md-visually-hidden">{{ lang.t('action.view') }}</span>
     </a>
   {% endif %}
 {% endif %}
